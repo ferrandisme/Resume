@@ -9,10 +9,10 @@ export class SocialComponent {
 
 
   protected openPortfolio () : void {
-    window.open("https://www.linkedin.com/in/adrian-ferrandis/", "_blank");
+    window.open("https://github.com/ferrandisme", "_blank");
   }
 
   protected openJobs () : void {
-    window.open("https://github.com/ferrandisme", "_blank");
+    window.open("https://www.linkedin.com/in/adrian-ferrandis/", "_blank");
   }
 }
