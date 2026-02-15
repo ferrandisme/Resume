@@ -41,12 +41,16 @@ const homeHref = getHomePath(locale);
 const esHome = new URL('/', siteConfig.siteUrl).toString();
 const enHome = new URL('/en/', siteConfig.siteUrl).toString();
 
-const structuredData = {
+const personStructuredData = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: siteConfig.name,
+  givenName: 'Adrian',
+  familyName: 'Ferrandis Homsi',
+  alternateName: ['Adrian Ferrandis', 'Adrian Ferrandis Homsi'],
   jobTitle: siteConfig.role,
   url: siteConfig.siteUrl,
+  image: new URL('/og-adrian.svg', siteConfig.siteUrl).toString(),
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Valencia',
@@ -55,6 +59,24 @@ const structuredData = {
   email: `mailto:${siteConfig.email}`,
   sameAs: [siteConfig.social.github, siteConfig.social.linkedin, siteConfig.social.blog],
   knowsLanguage: languageLevels.map((item) => localizeText(item.language, locale)),
+  knowsAbout: [
+    'Java',
+    'Spring Boot',
+    'TypeScript',
+    'Angular',
+    'Next.js',
+    'Python',
+    'Machine Learning',
+    'AI coding agents',
+  ],
+};
+
+const websiteStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteConfig.name,
+  url: siteConfig.siteUrl,
+  inLanguage: locale === 'es' ? ['es-ES', 'en-US'] : ['en-US', 'es-ES'],
 };
 ---
 
@@ -69,7 +91,7 @@ const structuredData = {
     { hreflang: 'en', href: enHome },
     { hreflang: 'x-default', href: enHome },
   ]}
-  structuredData={structuredData}
+  structuredData={[personStructuredData, websiteStructuredData]}
 >
   <div class="page-shell">
     <SiteHeader

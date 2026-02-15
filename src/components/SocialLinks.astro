@@ -13,8 +13,8 @@ const { linkedInLabel, githubLabel, emailLabel, blogLabel, ariaLabel = 'Social l
 ---
 
 <ul class="social-links" aria-label={ariaLabel}>
-  <li><a href={siteConfig.social.linkedin} target="_blank" rel="noreferrer">{linkedInLabel}</a></li>
-  <li><a href={siteConfig.social.github} target="_blank" rel="noreferrer">{githubLabel}</a></li>
-  <li><a href={siteConfig.social.blog} target="_blank" rel="noreferrer">{blogLabel}</a></li>
+  <li><a href={siteConfig.social.linkedin} target="_blank" rel="me noreferrer">{linkedInLabel}</a></li>
+  <li><a href={siteConfig.social.github} target="_blank" rel="me noreferrer">{githubLabel}</a></li>
+  <li><a href={siteConfig.social.blog} target="_blank" rel="me noreferrer">{blogLabel}</a></li>
   <li><a href={`mailto:${siteConfig.email}`}>{emailLabel}</a></li>
 </ul>

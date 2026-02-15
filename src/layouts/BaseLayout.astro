@@ -36,6 +36,9 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteConfig.siteUrl
 const ogImageUrl = new URL(image, siteConfig.siteUrl).toString();
 const ogLocale = locale === 'es' ? 'es_ES' : 'en_US';
 const skipLinkLabel = locale === 'es' ? 'Saltar al contenido' : 'Skip to content';
+const robotsContent = noindex
+  ? 'noindex, nofollow'
+  : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 ---
 
 <!doctype html>
@@ -45,6 +48,8 @@ const skipLinkLabel = locale === 'es' ? 'Saltar al contenido' : 'Skip to content
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={computedDescription} />
+    <meta name="author" content={siteConfig.name} />
+    <meta name="robots" content={robotsContent} />
     <meta name="theme-color" content="#f6f4ee" />
 
     <script is:inline>
@@ -116,8 +121,6 @@ const skipLinkLabel = locale === 'es' ? 'Saltar al contenido' : 'Skip to content
     <meta name="twitter:title" content={computedTitle} />
     <meta name="twitter:description" content={computedDescription} />
     <meta name="twitter:image" content={ogImageUrl} />
-
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     {structuredData && (
       <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
