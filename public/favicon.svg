@@ -1,13 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <defs>
-    <linearGradient id="afg" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+    <linearGradient id="afg" x1="7" y1="7" x2="57" y2="57" gradientUnits="userSpaceOnUse">
       <stop stop-color="#006d67" />
       <stop offset="1" stop-color="#d97706" />
     </linearGradient>
   </defs>
+
   <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#afg)" />
-  <path
-    d="M20 45 29.8 19h4.3L44 45h-5.2l-2-5.8h-9.6L25 45H20Zm8.6-10h6.6l-3.3-9.6L28.6 35ZM47.5 19h4.8v10.4H60v4h-7.7V45h-4.8V19Z"
-    fill="#fff"
-  />
+
+  <g
+    stroke="#ffffff"
+    stroke-width="4.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-label="AF"
+  >
+    <path d="M15 47L24 18L33 47" />
+    <path d="M19 36H29" />
+
+    <path d="M39 47V18H52" />
+    <path d="M39 32H49" />
+  </g>
 </svg>
