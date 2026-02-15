@@ -7,6 +7,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "firebase:deploy": "npm run build && npx firebase-tools deploy --only hosting",
+    "firebase:preview": "npm run build && npx firebase-tools hosting:channel:deploy preview",
     "astro": "astro"
   },
   "dependencies": {
