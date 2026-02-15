@@ -1,0 +1,17 @@
+{
+  "name": "Adrian Ferrandis | Software Engineer",
+  "short_name": "Adrian",
+  "description": "Portfolio de Adrian Ferrandis Homsi, Software Engineer en Valencia especializado en Spring y TypeScript.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f4ee",
+  "theme_color": "#006d67",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

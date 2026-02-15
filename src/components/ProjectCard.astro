@@ -1,0 +1,72 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getProjectPath, localizeText } from '../i18n/config';
+import type { Locale } from '../i18n/config';
+
+type Project = CollectionEntry<'projects'>;
+
+interface Props {
+  project: Project;
+  locale: Locale;
+  copy: {
+    detail: string;
+    code: string;
+    article: string;
+    demo: string;
+    status: {
+      completed: string;
+      inProgress: string;
+      hackathon: string;
+    };
+  };
+}
+
+const { project, locale, copy } = Astro.props;
+const { data, slug } = project;
+
+const statusLabelMap = {
+  completed: copy.status.completed,
+  'in-progress': copy.status.inProgress,
+  hackathon: copy.status.hackathon,
+} as const;
+
+const detailPath = getProjectPath(locale, slug);
+const projectTitle = localizeText(data.title, locale);
+const stackAriaLabel =
+  locale === 'es' ? `Tecnologías usadas en ${projectTitle}` : `Tech used in ${projectTitle}`;
+---
+
+<article class="card project-card reveal">
+  <div class="project-top">
+    <p class="project-meta">
+      <span>{data.year}</span>
+      <span class="dot" aria-hidden="true">•</span>
+      <span>{statusLabelMap[data.status]}</span>
+    </p>
+    <h3>{projectTitle}</h3>
+    <p>{localizeText(data.summary, locale)}</p>
+  </div>
+
+  <ul class="chip-list" aria-label={stackAriaLabel}>
+    {data.stack.map((item) => <li>{item}</li>)}
+  </ul>
+
+  <div class="project-links">
+    <a href={detailPath} class="button button-ghost">{copy.detail}</a>
+    {data.repoUrl && (
+      <a href={data.repoUrl} target="_blank" rel="noreferrer" class="button button-ghost">
+        {copy.code}
+      </a>
+    )}
+    {data.articleUrl && (
+      <a href={data.articleUrl} target="_blank" rel="noreferrer" class="button button-ghost">
+        {copy.article}
+      </a>
+    )}
+    {data.demoUrl && data.demoUrl !== '/' && (
+      <a href={data.demoUrl} target="_blank" rel="noreferrer" class="button button-ghost">
+        {copy.demo}
+      </a>
+    )}
+  </div>
+</article>

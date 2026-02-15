@@ -1,0 +1,34 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { localizeText } from '../i18n/config';
+import type { Locale } from '../i18n/config';
+import { formatDateRange } from '../utils/format';
+
+type Experience = CollectionEntry<'experience'>;
+
+interface Props {
+  item: Experience;
+  locale: Locale;
+}
+
+const { item, locale } = Astro.props;
+const { data } = item;
+const stackAriaLabel = locale === 'es' ? `Stack en ${data.company}` : `Stack at ${data.company}`;
+---
+
+<article class="timeline-item reveal">
+  <header>
+    <p class="timeline-date">{formatDateRange(data.startDate, data.endDate, locale)}</p>
+    <h3>{localizeText(data.role, locale)}</h3>
+    <p class="timeline-company">{data.company} · {localizeText(data.modality, locale)}</p>
+    <p class="timeline-location">{localizeText(data.location, locale)}</p>
+  </header>
+
+  <ul class="bullet-list">
+    {data.highlights.map((highlight) => <li>{localizeText(highlight, locale)}</li>)}
+  </ul>
+
+  <ul class="chip-list" aria-label={stackAriaLabel}>
+    {data.stack.map((tech) => <li>{tech}</li>)}
+  </ul>
+</article>

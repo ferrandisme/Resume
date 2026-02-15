@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { localizeText } from '../i18n/config';
+import type { Locale } from '../i18n/config';
+import { formatDateRange } from '../utils/format';
+
+type Education = CollectionEntry<'education'>;
+
+interface Props {
+  item: Education;
+  locale: Locale;
+}
+
+const { item, locale } = Astro.props;
+const { data } = item;
+---
+
+<article class="timeline-item reveal">
+  <header>
+    <p class="timeline-date">{formatDateRange(data.startDate, data.endDate, locale)}</p>
+    <h3>{localizeText(data.degree, locale)}</h3>
+    <p class="timeline-company">{data.institution}</p>
+    <p class="timeline-location">{localizeText(data.field, locale)}</p>
+    {data.grade && <p class="timeline-grade">{localizeText(data.grade, locale)}</p>}
+  </header>
+
+  {data.highlights.length > 0 && (
+    <ul class="bullet-list">
+      {data.highlights.map((highlight) => <li>{localizeText(highlight, locale)}</li>)}
+    </ul>
+  )}
+</article>

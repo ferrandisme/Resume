@@ -1,0 +1,64 @@
+---
+import type { Locale } from '../i18n/config';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  locale: Locale;
+  navItems: Array<{ label: string; href: string }>;
+  homeHref: string;
+  localeSwitchHref: string;
+  localeSwitchLabel: string;
+  themeCopy: {
+    toggle: string;
+    light: string;
+    dark: string;
+  };
+}
+
+const { locale, navItems, homeHref, localeSwitchHref, localeSwitchLabel, themeCopy } = Astro.props;
+const homeAriaLabel = locale === 'es' ? 'Ir al inicio' : 'Go to home';
+const navAriaLabel = locale === 'es' ? 'Principal' : 'Main';
+---
+
+<header class="site-header">
+  <a class="brand" href={homeHref} aria-label={homeAriaLabel}>
+    <span class="brand-mark" aria-hidden="true">AF</span>
+    <span class="brand-text">Adrian Ferrandis</span>
+  </a>
+
+  <nav aria-label={navAriaLabel}>
+    <ul>
+      {
+        navItems.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <div class="header-actions">
+    <ThemeToggle label={themeCopy.toggle} lightText={themeCopy.light} darkText={themeCopy.dark} />
+    <a
+      class="locale-switch"
+      href={localeSwitchHref}
+      hreflang={localeSwitchLabel.toLowerCase()}
+      data-locale-switch
+    >
+      {localeSwitchLabel}
+    </a>
+  </div>
+</header>
+
+<script is:inline>
+  const localeLink = document.querySelector('[data-locale-switch]');
+
+  if (localeLink instanceof HTMLAnchorElement) {
+    localeLink.addEventListener('click', () => {
+      const href = localeLink.getAttribute('href') || '';
+      const targetLocale = href.startsWith('/en') ? 'en' : 'es';
+      localStorage.setItem('locale', targetLocale);
+    });
+  }
+</script>

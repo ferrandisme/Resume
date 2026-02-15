@@ -1,0 +1,114 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import { siteConfig } from '../../data/site';
+import { getHomePath, getLocaleSwitchPath, localizeText } from '../../i18n/config';
+import { getTranslations } from '../../i18n/translations';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const t = getTranslations('es');
+
+const navItems = [
+  { label: t.nav.home, href: '/#home' },
+  { label: t.nav.projects, href: '/#projects' },
+  { label: t.nav.contact, href: '/#contact' },
+];
+
+const localeSwitchHref = getLocaleSwitchPath('es', Astro.url.pathname);
+const title = localizeText(project.data.title, 'es');
+const summary = localizeText(project.data.summary, 'es');
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: title,
+  description: summary,
+  dateCreated: `${project.data.year}`,
+  author: {
+    '@type': 'Person',
+    name: siteConfig.name,
+  },
+  url: new URL(Astro.url.pathname, siteConfig.siteUrl).toString(),
+};
+---
+
+<BaseLayout
+  locale="es"
+  title={title}
+  description={summary}
+  canonical={new URL(Astro.url.pathname, siteConfig.siteUrl).toString()}
+  alternates={[
+    { hreflang: 'es', href: new URL(Astro.url.pathname, siteConfig.siteUrl).toString() },
+    { hreflang: 'en', href: new URL(localeSwitchHref, siteConfig.siteUrl).toString() },
+  ]}
+  structuredData={structuredData}
+>
+  <div class="page-shell">
+    <SiteHeader
+      locale="es"
+      navItems={navItems}
+      homeHref={getHomePath('es')}
+      localeSwitchHref={localeSwitchHref}
+      localeSwitchLabel={t.localeSwitch}
+      themeCopy={t.theme}
+    />
+
+    <main id="main-content" style="margin-top: 2rem; display: grid; gap: 1.2rem;">
+      <a class="button button-ghost" href="/#projects">{t.projectDetail.back}</a>
+
+      <article class="card reveal" style="display: grid; gap: 1rem;">
+        <p class="eyebrow">{project.data.year} · {t.projects.status[project.data.status === 'in-progress' ? 'inProgress' : project.data.status]}</p>
+        <h1>{title}</h1>
+
+        <section style="display: grid; gap: 0.6rem;">
+          <h2 style="font-size: 1.4rem;">{t.projectDetail.summary}</h2>
+          <p>{summary}</p>
+        </section>
+
+        <section style="display: grid; gap: 0.6rem;">
+          <h2 style="font-size: 1.4rem;">{t.projectDetail.stack}</h2>
+          <ul class="chip-list">
+            {project.data.stack.map((item) => <li>{item}</li>)}
+          </ul>
+        </section>
+
+        <section style="display: grid; gap: 0.4rem;">
+          <h2 style="font-size: 1.4rem;">{t.projectDetail.team}</h2>
+          <p>{project.data.team ? localizeText(project.data.team, 'es') : '-'}</p>
+          <h2 style="font-size: 1.4rem; margin-top: 0.5rem;">{t.projectDetail.duration}</h2>
+          <p>{project.data.duration ? localizeText(project.data.duration, 'es') : '-'}</p>
+        </section>
+
+        <section style="display: grid; gap: 0.6rem;">
+          <h2 style="font-size: 1.4rem;">{t.projectDetail.links}</h2>
+          <div class="contact-actions">
+            {project.data.repoUrl && (
+              <a class="button button-ghost" href={project.data.repoUrl} target="_blank" rel="noreferrer">
+                {t.projectDetail.repository}
+              </a>
+            )}
+            {project.data.articleUrl && (
+              <a class="button button-ghost" href={project.data.articleUrl} target="_blank" rel="noreferrer">
+                {t.projectDetail.article}
+              </a>
+            )}
+            {project.data.demoUrl && (
+              <a class="button button-ghost" href={project.data.demoUrl} target="_blank" rel="noreferrer">
+                {t.projectDetail.demo}
+              </a>
+            )}
+          </div>
+        </section>
+      </article>
+    </main>
+  </div>
+</BaseLayout>

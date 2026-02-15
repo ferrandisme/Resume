@@ -1,0 +1,82 @@
+---
+import type { Locale } from '../i18n/config';
+import { localizeText } from '../i18n/config';
+import { siteConfig } from '../data/site';
+import SocialLinks from './SocialLinks.astro';
+
+interface Props {
+  locale: Locale;
+  copy: {
+    eyebrow: string;
+    roleLine: string;
+    ctaProjects: string;
+    ctaContact: string;
+    panelTitle: string;
+    panelItems: string[];
+  };
+  labels: {
+    linkedIn: string;
+    github: string;
+    email: string;
+    blog: string;
+  };
+}
+
+const { locale, copy, labels } = Astro.props;
+const socialAriaLabel = locale === 'es' ? 'Redes y contacto' : 'Social and contact links';
+const experienceStartYear = 2021;
+const initialExperienceYears = Math.max(0, new Date().getFullYear() - experienceStartYear);
+const initialExperienceLabel =
+  locale === 'es'
+    ? `+${initialExperienceYears} años de experiencia profesional`
+    : `+${initialExperienceYears} years of professional experience`;
+---
+
+<section id="home" class="hero" aria-labelledby="hero-title">
+  <div class="hero-grid">
+    <div class="hero-copy reveal">
+      <p class="eyebrow">{copy.eyebrow}</p>
+      <h1 id="hero-title">{siteConfig.name}</h1>
+      <p class="hero-role">
+        {copy.roleLine} {localizeText(siteConfig.location, locale)}
+      </p>
+      <p class="hero-intro">{localizeText(siteConfig.intro, locale)}</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#projects">{copy.ctaProjects}</a>
+        <a class="button button-ghost" href="#contact">{copy.ctaContact}</a>
+      </div>
+      <SocialLinks
+        linkedInLabel={labels.linkedIn}
+        githubLabel={labels.github}
+        emailLabel={labels.email}
+        blogLabel={labels.blog}
+        ariaLabel={socialAriaLabel}
+      />
+    </div>
+
+    <aside class="hero-panel reveal" aria-label={copy.panelTitle}>
+      <p class="panel-title">{copy.panelTitle}</p>
+      <ul>
+        <li data-experience-years data-locale={locale} data-start-year={experienceStartYear}>
+          {initialExperienceLabel}
+        </li>
+        {copy.panelItems.map((item) => <li>{item}</li>)}
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<script is:inline>
+  const experienceItem = document.querySelector('[data-experience-years]');
+
+  if (experienceItem instanceof HTMLLIElement) {
+    const startYear = Number(experienceItem.getAttribute('data-start-year') || '2021');
+    const locale = experienceItem.getAttribute('data-locale') === 'es' ? 'es' : 'en';
+    const years = Math.max(0, new Date().getFullYear() - startYear);
+
+    experienceItem.textContent =
+      locale === 'es'
+        ? `+${years} años de experiencia profesional`
+        : `+${years} years of professional experience`;
+  }
+</script>

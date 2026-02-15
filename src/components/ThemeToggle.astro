@@ -1,0 +1,53 @@
+---
+interface Props {
+  label: string;
+  lightText: string;
+  darkText: string;
+}
+
+const { label, lightText, darkText } = Astro.props;
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  data-theme-toggle
+  aria-label={label}
+  data-light-text={lightText}
+  data-dark-text={darkText}
+>
+  <span data-theme-label>{lightText}</span>
+</button>
+
+<script is:inline>
+  const applyThemeLabel = (button) => {
+    const currentTheme = document.documentElement.dataset.theme || 'light';
+    const label = button.querySelector('[data-theme-label]');
+    if (!label) return;
+
+    const lightText = button.getAttribute('data-light-text') || 'Light';
+    const darkText = button.getAttribute('data-dark-text') || 'Dark';
+    label.textContent = currentTheme === 'dark' ? darkText : lightText;
+  };
+
+  const initThemeToggle = () => {
+    const button = document.querySelector('[data-theme-toggle]');
+    if (!(button instanceof HTMLButtonElement)) return;
+
+    applyThemeLabel(button);
+
+    button.addEventListener('click', () => {
+      const current = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem('theme', next);
+      applyThemeLabel(button);
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemeToggle, { once: true });
+  } else {
+    initThemeToggle();
+  }
+</script>
