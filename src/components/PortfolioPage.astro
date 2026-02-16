@@ -27,7 +27,7 @@ const experience = sortByOrderDesc(await getCollection('experience'));
 const education = sortByOrderDesc(await getCollection('education'));
 
 const navItems = [
-  { label: t.nav.home, href: '#home' },
+  { label: t.nav.home, href: '#top' },
   { label: t.nav.projects, href: '#projects' },
   { label: t.nav.experience, href: '#experience' },
   { label: t.nav.education, href: '#education' },
@@ -94,6 +94,8 @@ const websiteStructuredData = {
   structuredData={[personStructuredData, websiteStructuredData]}
 >
   <div class="page-shell">
+    <div id="top" aria-hidden="true"></div>
+
     <SiteHeader
       locale={locale}
       navItems={navItems}

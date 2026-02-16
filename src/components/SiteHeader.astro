@@ -18,9 +18,10 @@ interface Props {
 const { locale, navItems, homeHref, localeSwitchHref, localeSwitchLabel, themeCopy } = Astro.props;
 const homeAriaLabel = locale === 'es' ? 'Ir al inicio' : 'Go to home';
 const navAriaLabel = locale === 'es' ? 'Principal' : 'Main';
+const expandMenuLabel = locale === 'es' ? 'Abrir menú' : 'Open menu';
 ---
 
-<header class="site-header">
+<header class="site-header" data-site-header>
   <a class="brand" href={homeHref} aria-label={homeAriaLabel}>
     <span class="brand-mark" aria-hidden="true">AF</span>
     <span class="brand-text">Adrian Ferrandis</span>
@@ -31,7 +32,7 @@ const navAriaLabel = locale === 'es' ? 'Principal' : 'Main';
       {
         navItems.map((item) => (
           <li>
-            <a href={item.href}>{item.label}</a>
+            <a href={item.href} data-section-link>{item.label}</a>
           </li>
         ))
       }
@@ -51,14 +52,186 @@ const navAriaLabel = locale === 'es' ? 'Principal' : 'Main';
   </div>
 </header>
 
-<script is:inline>
-  const localeLink = document.querySelector('[data-locale-switch]');
+<button class="header-peek" type="button" aria-label={expandMenuLabel} data-header-peek>
+  <span aria-hidden="true">☰</span>
+</button>
 
-  if (localeLink instanceof HTMLAnchorElement) {
-    localeLink.addEventListener('click', () => {
-      const href = localeLink.getAttribute('href') || '';
-      const targetLocale = href.startsWith('/en') ? 'en' : 'es';
-      localStorage.setItem('locale', targetLocale);
+<script is:inline>
+  (() => {
+    const header = document.querySelector('[data-site-header]');
+    if (!(header instanceof HTMLElement)) return;
+    const peekButton = document.querySelector('[data-header-peek]');
+    const canUsePeekButton = peekButton instanceof HTMLButtonElement;
+
+    const localeLink = header.querySelector('[data-locale-switch]');
+    if (localeLink instanceof HTMLAnchorElement) {
+      localeLink.addEventListener('click', () => {
+        const href = localeLink.getAttribute('href') || '';
+        const targetLocale = href.startsWith('/en') ? 'en' : 'es';
+        localStorage.setItem('locale', targetLocale);
+      });
+    }
+
+    const mobileQuery = window.matchMedia('(max-width: 960px)');
+    const hiddenClass = 'site-header-hidden';
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    let isAnchorNavigating = false;
+    let anchorTargetY = Number.NaN;
+    let anchorNavUntil = 0;
+    let waitForUserIntent = false;
+
+    const resetAnchorNavigation = () => {
+      isAnchorNavigating = false;
+      anchorTargetY = Number.NaN;
+      anchorNavUntil = 0;
+    };
+
+    const setPeekVisible = (visible) => {
+      if (!canUsePeekButton) return;
+      const shouldShow = mobileQuery.matches && visible;
+      peekButton.classList.toggle('is-visible', shouldShow);
+      peekButton.tabIndex = shouldShow ? 0 : -1;
+      peekButton.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+    };
+
+    const setHeaderHidden = (hidden) => {
+      header.classList.toggle(hiddenClass, hidden);
+      setPeekVisible(hidden);
+    };
+
+    const onUserIntent = () => {
+      if (!mobileQuery.matches) return;
+      waitForUserIntent = false;
+      if (isAnchorNavigating) {
+        resetAnchorNavigation();
+      }
+    };
+
+    const isAnchorNavigationDone = (currentY) => {
+      if (!isAnchorNavigating) return false;
+      if (Date.now() > anchorNavUntil) return true;
+      return Number.isFinite(anchorTargetY) && Math.abs(currentY - anchorTargetY) <= 16;
+    };
+
+    const finishAnchorNavigation = () => {
+      resetAnchorNavigation();
+      waitForUserIntent = true;
+    };
+
+    const updateHeaderVisibility = () => {
+      if (!mobileQuery.matches) {
+        resetAnchorNavigation();
+        waitForUserIntent = false;
+        setHeaderHidden(false);
+        lastScrollY = window.scrollY;
+        return;
+      }
+
+      const currentY = window.scrollY;
+
+      if (isAnchorNavigating) {
+        setHeaderHidden(true);
+        if (isAnchorNavigationDone(currentY)) {
+          finishAnchorNavigation();
+        }
+        lastScrollY = currentY;
+        return;
+      }
+
+      if (waitForUserIntent) {
+        setHeaderHidden(true);
+        lastScrollY = currentY;
+        return;
+      }
+
+      const delta = currentY - lastScrollY;
+
+      if (currentY <= 8 || delta < -6) {
+        setHeaderHidden(false);
+      } else if (delta > 6 && currentY > 80) {
+        setHeaderHidden(true);
+      }
+
+      lastScrollY = currentY;
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        updateHeaderVisibility();
+        ticking = false;
+      });
+    };
+
+    const sectionLinks = header.querySelectorAll('a[data-section-link][href^="#"]');
+    sectionLinks.forEach((link) => {
+      if (!(link instanceof HTMLAnchorElement)) return;
+
+      link.addEventListener('click', (event) => {
+        const href = link.getAttribute('href') || '';
+        if (href === '#top') {
+          resetAnchorNavigation();
+          waitForUserIntent = false;
+          setHeaderHidden(false);
+          event.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          if (typeof history.replaceState === 'function') {
+            history.replaceState(null, '', '#top');
+          }
+          return;
+        }
+
+        if (!mobileQuery.matches) return;
+
+        const target = document.querySelector(href);
+        const targetY =
+          target instanceof HTMLElement ? target.getBoundingClientRect().top + window.scrollY : Number.NaN;
+
+        isAnchorNavigating = true;
+        anchorTargetY = targetY;
+        anchorNavUntil = Date.now() + 2200;
+        waitForUserIntent = false;
+        setHeaderHidden(true);
+        lastScrollY = window.scrollY;
+      });
     });
-  }
+
+    header.addEventListener('focusin', () => {
+      resetAnchorNavigation();
+      waitForUserIntent = false;
+      setHeaderHidden(false);
+    });
+
+    const onMediaChange = () => {
+      resetAnchorNavigation();
+      waitForUserIntent = false;
+      setHeaderHidden(false);
+      lastScrollY = window.scrollY;
+    };
+
+    if (typeof mobileQuery.addEventListener === 'function') {
+      mobileQuery.addEventListener('change', onMediaChange);
+    } else {
+      mobileQuery.addListener(onMediaChange);
+    }
+
+    window.addEventListener('touchstart', onUserIntent, { passive: true });
+    window.addEventListener('pointerdown', onUserIntent, { passive: true });
+    window.addEventListener('wheel', onUserIntent, { passive: true });
+    window.addEventListener('keydown', onUserIntent);
+
+    if (canUsePeekButton) {
+      peekButton.addEventListener('click', () => {
+        resetAnchorNavigation();
+        waitForUserIntent = false;
+        setHeaderHidden(false);
+      });
+      setPeekVisible(false);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateHeaderVisibility();
+  })();
 </script>

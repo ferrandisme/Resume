@@ -93,7 +93,7 @@ const translations: Record<Locale, TranslationKey> = {
       projects: 'Proyectos',
       experience: 'Experiencia',
       education: 'Educación',
-      skills: 'Skills',
+      skills: 'Stack',
       contact: 'Contacto',
     },
     hero: {
@@ -187,7 +187,7 @@ const translations: Record<Locale, TranslationKey> = {
       projects: 'Projects',
       experience: 'Experience',
       education: 'Education',
-      skills: 'Skills',
+      skills: 'Stack',
       contact: 'Contact',
     },
     hero: {
@@ -230,7 +230,7 @@ const translations: Record<Locale, TranslationKey> = {
       },
     },
     experience: {
-      eyebrow: 'Journey',
+      eyebrow: 'Career',
       title: 'Professional experience',
       intro: 'Experience in real product environments with a strong focus on delivery quality and technical evolution.',
     },
@@ -241,8 +241,9 @@ const translations: Record<Locale, TranslationKey> = {
     },
     skills: {
       eyebrow: 'Technologies',
-      title: 'Stack, TypeScript and capabilities',
-      intro: 'Technical and delivery skills to build reliable software products, including TypeScript ecosystems for frontend and backend.',
+      title: 'Stack, TypeScript, and skills',
+      intro:
+        'Set of technical and methodological skills to build reliable software products, including TypeScript ecosystems for frontend and backend.',
       languages: 'Languages',
     },
     contact: {

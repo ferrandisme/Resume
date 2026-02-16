@@ -16,18 +16,30 @@ const { label, lightText, darkText } = Astro.props;
   data-light-text={lightText}
   data-dark-text={darkText}
 >
-  <span data-theme-label>{lightText}</span>
+  <span class="theme-toggle-icon" data-theme-icon aria-hidden="true">☀</span>
+  <span class="theme-toggle-label" data-theme-label>{lightText}</span>
 </button>
 
 <script is:inline>
   const applyThemeLabel = (button) => {
     const currentTheme = document.documentElement.dataset.theme || 'light';
     const label = button.querySelector('[data-theme-label]');
+    const icon = button.querySelector('[data-theme-icon]');
     if (!label) return;
 
-    const lightText = button.getAttribute('data-light-text') || 'Light';
-    const darkText = button.getAttribute('data-dark-text') || 'Dark';
-    label.textContent = currentTheme === 'dark' ? darkText : lightText;
+    const htmlLang = document.documentElement.lang || 'en';
+    const isSpanish = htmlLang.toLowerCase().startsWith('es');
+    const fallbackLight = isSpanish ? 'Claro' : 'Light';
+    const fallbackDark = isSpanish ? 'Oscuro' : 'Dark';
+
+    const lightText = button.getAttribute('data-light-text') || fallbackLight;
+    const darkText = button.getAttribute('data-dark-text') || fallbackDark;
+    const isDark = currentTheme === 'dark';
+    label.textContent = isDark ? darkText : lightText;
+
+    if (icon instanceof HTMLElement) {
+      icon.textContent = isDark ? '☾' : '☀';
+    }
   };
 
   const initThemeToggle = () => {
