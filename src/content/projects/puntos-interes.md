@@ -5,7 +5,7 @@ title:
 summary:
   es: Proyecto de hackathon de un día en equipo centrado en descubrir y visualizar lugares de interés de forma rápida y útil.
   en: One-day team hackathon project focused on discovering and visualizing points of interest quickly.
-year: 2024
+year: 2025
 status: hackathon
 stack:
   - Next.js

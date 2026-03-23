@@ -26,6 +26,10 @@ const navItems = [
 const localeSwitchHref = getLocaleSwitchPath('es', Astro.url.pathname);
 const title = localizeText(project.data.title, 'es');
 const summary = localizeText(project.data.summary, 'es');
+const yearDisplay = project.data.yearLabel ?? `${project.data.year}`;
+const statusLabel = t.projects.status[
+  project.data.status === 'in-progress' ? 'inProgress' : project.data.status
+];
 
 const structuredData = {
   '@context': 'https://schema.org',
@@ -66,7 +70,10 @@ const structuredData = {
       <a class="button button-ghost" href="/#projects">{t.projectDetail.back}</a>
 
       <article class="card reveal" style="display: grid; gap: 1rem;">
-        <p class="eyebrow">{project.data.year} · {t.projects.status[project.data.status === 'in-progress' ? 'inProgress' : project.data.status]}</p>
+        <p class="eyebrow">
+          {yearDisplay}
+          {!project.data.hideStatus && <> · {statusLabel}</>}
+        </p>
         <h1>{title}</h1>
 
         <section style="display: grid; gap: 0.6rem;">

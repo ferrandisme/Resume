@@ -11,6 +11,8 @@ const projects = defineCollection({
     title: localizedString,
     summary: localizedString,
     year: z.number(),
+    yearLabel: z.string().optional(),
+    hideStatus: z.boolean().default(false),
     status: z.enum(['completed', 'in-progress', 'hackathon']),
     stack: z.array(z.string()),
     featured: z.boolean().default(false),

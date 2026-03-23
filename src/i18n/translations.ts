@@ -124,7 +124,7 @@ const translations: Record<Locale, TranslationKey> = {
     projects: {
       eyebrow: 'Portfolio',
       title: 'Proyectos seleccionados',
-      intro: 'Casos donde combino ingeniería, producto y entrega real. Cada proyecto está desacoplado para facilitar cambios futuros.',
+      intro: 'Casos donde combino todas mis capacidades de ingeniería del software para crear productos.',
       detail: 'Detalle',
       code: 'Código',
       article: 'Artículo',
@@ -218,7 +218,7 @@ const translations: Record<Locale, TranslationKey> = {
     projects: {
       eyebrow: 'Portfolio',
       title: 'Selected projects',
-      intro: 'Examples where I combine engineering, product thinking, and delivery. Each project is structured for future changes.',
+      intro: 'Examples where I combine all my software engineering capabilities to build products.',
       detail: 'Details',
       code: 'Code',
       article: 'Article',

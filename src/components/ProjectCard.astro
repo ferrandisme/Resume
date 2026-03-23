@@ -34,14 +34,19 @@ const detailPath = getProjectPath(locale, slug);
 const projectTitle = localizeText(data.title, locale);
 const stackAriaLabel =
   locale === 'es' ? `Tecnologías usadas en ${projectTitle}` : `Tech used in ${projectTitle}`;
+const yearDisplay = data.yearLabel ?? `${data.year}`;
 ---
 
 <article class="card project-card reveal">
   <div class="project-top">
     <p class="project-meta">
-      <span>{data.year}</span>
-      <span class="dot" aria-hidden="true">•</span>
-      <span>{statusLabelMap[data.status]}</span>
+      <span>{yearDisplay}</span>
+      {!data.hideStatus && (
+        <>
+          <span class="dot" aria-hidden="true">•</span>
+          <span>{statusLabelMap[data.status]}</span>
+        </>
+      )}
     </p>
     <h3>{projectTitle}</h3>
     <p>{localizeText(data.summary, locale)}</p>
