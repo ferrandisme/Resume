@@ -1,0 +1,92 @@
+---
+title: "Migrate from Spring Boot 2.0 to 3.4"
+date: "2025-05-14"
+tags: ["java", "spring", "migration"]
+draft: false
+summary: "Comprehensive guide to migrate from Spring Boot 2.0 to 3.4, covering prerequisites, tools, and detailed steps for a successful transition."
+---
+
+![Spring Boot migration](/static/images/2025-05/migration-spring.png)
+
+# Migrate from Spring Boot 2.0 to Spring Boot 3.4
+
+Spring Boot 3 is a significant improvement, introducing major enhancements in areas like performance and security. It also brings changes such as the transition from `javax` to `jakarta` packages. Let’s analyze the different parts of the migration process.
+
+We will use commands that can save hours of work on changes, aiming to make the migration as simple as possible. Additionally, we will follow straightforward steps to approach the migration in the easiest way possible.
+
+# Prerequisites
+
+There are certain points we need to address before starting the migration of our application:
+
+### Java 17
+
+Spring Boot 3 requires Java 17 as a minimum, so we should start by upgrading the JDK version to at least this version. However, it is worth considering using Java 21 alongside Spring Boot 3, as it will allow us to use a more varied syntax and take advantage of [virtual threads](https://spring.io/blog/2022/10/11/embracing-virtual-threads).
+
+### Spring Boot 2.7
+
+The next step is to upgrade to the latest version of Spring Boot 2, which in this case is version 2.7. It is also advisable to remove all explicitly defined dependencies that can be automatically managed by Spring Boot.
+
+This step can be critical depending on the various dependencies of each project. It is advisable to consult the different migration guides provided by each dependency to address it correctly.
+
+This step is usually done manually, but you can use automatic migration tools. Below is a list of migration recipes for some versions:
+
+[Migrate to Spring Boot 2.0](https://docs.openrewrite.org/recipes/java/spring/boot2/upgradespringboot_2_0)  
+[Migrate to Spring Boot 2.1](https://docs.openrewrite.org/recipes/java/spring/boot2/upgradespringboot_2_1)  
+[Migrate to Spring Boot 2.2](https://docs.openrewrite.org/recipes/java/spring/boot2/upgradespringboot_2_2)  
+[Migrate to Spring Boot 2.3](https://docs.openrewrite.org/recipes/java/spring/boot2/upgradespringboot_2_3)  
+[Migrate to Spring Boot 2.4](https://docs.openrewrite.org/recipes/java/spring/boot2/upgradespringboot_2_4)  
+[Migrate to Spring Boot 2.5](https://docs.openrewrite.org/recipes/java/spring/boot2/upgradespringboot_2_5)  
+[Migrate to Spring Boot 2.6](https://docs.openrewrite.org/recipes/java/spring/boot2/upgradespringboot_2_6)  
+[Migrate to Spring Boot 2.7](https://docs.openrewrite.org/recipes/java/spring/boot2/upgradespringboot_2_7)
+
+Whether or not you use the migrator, we recommend reviewing the changelog for each version or the migration help if available, to address issues incrementally and easily.
+
+If you need other recipes of interest for changes in these versions, you can check all the available recipes for Spring Boot 2 [here](https://docs.openrewrite.org/recipes/java/spring/boot2).
+
+### Spring Security 6
+
+The last prerequisite will be to update the version of Spring Security if it is being used in the project. This is because Spring Boot 3 is not compatible with version 5. Fortunately, Spring provides information on how to [prepare for the migration](https://docs.spring.io/spring-security/reference/5.8/migration/index.html) and how to [migrate to Spring Security 6](https://docs.spring.io/spring-security/reference/6.0/migration/index.html). The first step will be to migrate to Spring Security 5.8 following the first guide, as this version is designed to make the migration to version 6 easier. Once this step is completed, we will follow the instructions in the second link to finalize this migration.
+
+### Ensure readiness to start
+
+Before jumping to Spring Boot 3.0, ensure that everything in your application works as it did before upgrading to Spring Boot 2.7. It is also important to **review all "deprecated" warnings**, as these may no longer exist in Spring Boot 3. Save your changes with your version control system, as this will help you revert between versions, as you will likely face various challenges.
+
+# Spring Boot 3.0
+
+We are ready to start migrating. Here we will use the [Open Rewrite](https://docs.openrewrite.org/recipes/java/spring/boot3) migrator. However, there are other alternatives:
+
+- [Spring Boot Migrator Project](https://github.com/spring-projects-experimental/spring-boot-migrator)
+- [IntelliJ Tools](https://blog.jetbrains.com/idea/2021/06/intellij-idea-eap-6/)
+
+Additionally, if you want to make the changes for this version manually, there is a migration guide on [GitHub](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#upgrade-to-spring-boot-3) and another article on [Baeldung](https://www.baeldung.com/spring-boot-3-migration) that explains how to do it. We recommend running the OpenRewrite automatic migrator and, once completed, reviewing both guides in case additional adjustments are needed.
+
+Run the following [recipe](https://docs.openrewrite.org/recipes/java/spring/boot3/upgradespringboot_3_0) from OpenRewrite in the terminal:
+
+`mvn -U org.openrewrite.maven:rewrite-maven-plugin:run -Drewrite.recipeArtifactCoordinates=org.openrewrite.recipe:rewrite-spring:RELEASE -Drewrite.activeRecipes=org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_0 -Drewrite.exportDatatables=true`
+
+This process may take some time, as it will make many changes. Once completed, you will likely encounter compilation errors. We will address these later, but first, we need to perform other checks.
+
+**The first thing we need to check is that the changes made by the migrator, especially in the dependencies, are correct.** Below, we detail some issues that may occur during the migration:
+
+**CXF**: This dependency has [issues](https://issues.apache.org/jira/browse/CXF-8671?src=confmacro) in Jakarta 10 versions. These issues have been recently resolved in version 4.1 and later.
+
+**Properties:** It is always a good idea to run the [property migrator](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#configuration-properties-migration), as it will allow you to resolve property issues automatically.
+
+**Spring Batch:** If you use Spring Batch in your project, it has undergone many changes. We recommend following the [Spring Batch migration guide](https://github.com/spring-projects/spring-batch/wiki/Spring-Batch-5.0-Migration-Guide) to resolve issues.
+
+**Other issues:** The migrator addresses the most common cases, but it may make mistakes or fail to handle certain issues correctly. These usually depend heavily on the project and the libraries you use. The best way to address this is to consult the [general migration guides](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide) or those specific to your dependencies. We also recommend [this](https://sendoh-daten.medium.com/the-issues-i-encounter-when-migrating-spring-boot-from-2-x-to-3-x-including-spring-security-e8572851287b) Medium article with some issues.
+
+Subsequently, we will follow this process:
+
+1. Review the changes made by the automigrator, especially in the dependencies, to ensure they are correct.
+2. If the parent POM is not modified, update it to the corresponding Spring Boot version. The same applies to the JDK.
+3. Resolve compilation errors in production code.
+4. Ensure the application can run (starts correctly).
+5. Resolve compilation errors in tests.
+6. Verify that the application works correctly.
+
+These steps are basic but essential. We must follow them for each version we upgrade.
+
+# Spring Boot 3.1
+
+...

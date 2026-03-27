@@ -1,0 +1,88 @@
+---
+title: Mock HTTP request en Java & Kotlin
+date: "2025-02-20"
+tags: ["java", "test"]
+draft: false
+summary: MockWebServer para simular llamadas HTTP en Java & Kotlin
+---
+
+# Simular solicitudes HTTP en Java y Kotlin
+
+Hay ocasiones en las que necesitamos simular una solicitud HTTP en nuestras pruebas de Java. En este artículo, te mostraré cómo hacerlo.
+
+# MockWebServer
+
+[MockWebServer](https://mvnrepository.com/artifact/com.squareup.okhttp3/mockwebserver) es un proyecto creado por Square que está disponible tanto para Kotlin como para Java. En este ejemplo, usaremos Java.
+
+## Agregar dependencias
+
+Usaremos Maven. Agrega la siguiente dependencia a tu archivo `pom.xml`:
+
+```xml
+    <dependency>
+        <groupId>com.squareup.okhttp3</groupId>
+        <artifactId>mockwebserver</artifactId>
+        <version>5.0.0-alpha.14</version>
+        <scope>test</scope>
+    </dependency>
+```
+
+Además, para las pruebas utilizaremos JUnit5.
+
+## Crear un servicio básico
+
+Vamos a crear un servicio básico que realizará una solicitud a un servidor.
+
+```java
+    private final WebClient webClient;
+
+    public MyService() {
+        this.webClient =  WebClient.create();
+    }
+
+    public String get(String url) {
+        return webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
+```
+
+## Crear una prueba
+
+Ahora vamos a crear una prueba que simulará la respuesta del servidor.
+
+```java
+    public static final String RESPONSE = "Esta es una respuesta simulada";
+    private MockWebServer mockServer;
+
+    private MyService service;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        this.service = new MyService();
+        mockServer = new MockWebServer();
+        mockServer.start();
+    }
+
+    @AfterEach
+    void tearDown() throws IOException {
+        mockServer.shutdown();
+    }
+
+    @Test
+    void get(){
+        //GIVEN
+        mockServer.enqueue(new MockResponse().setBody(RESPONSE));
+        HttpUrl baseUrl = mockServer.url("api/chat");
+        //WHEN
+        String result = service.get(baseUrl.toString());
+        //THEN
+        assertEquals(RESPONSE, result);
+    }
+```
+
+# Conclusión
+
+MockWebServer es una excelente herramienta para simular solicitudes HTTP en Java y Kotlin. Es fácil de usar y muy poderosa.

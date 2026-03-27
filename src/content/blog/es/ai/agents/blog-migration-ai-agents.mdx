@@ -1,0 +1,77 @@
+---
+title: "Cómo migré el blog con agentes de IA: Orquestación de agentes"
+date: "2026-03-23"
+tags:
+  ["ia", "agentes", "orquestacion", "developer-experience", "migracion", "blog"]
+draft: false
+summary: "Migré el blog de my-blog a Resume utilizando agentes especializados para research, planificación, implementación, revisión, devops, pruebas en navegador y documentación. Este proceso no solo fue un cambio técnico, sino una migración estructurada, validada y trazable."
+---
+
+# Cómo migré el blog con agentes de IA: PRD, olas y validación real
+
+Migrar mi blog desde mi web antigua a mi portafolio actual fue más que un cambio técnico. Lo interesante no fue solo mover contenido, sino estructurar el proceso con agentes especializados que aportaron claridad y orden.
+
+Podría describir esta migración como un traslado de contenido entre proyectos, pero lo que realmente marcó la diferencia fue convertirla en un flujo operativo con documentación clara, pasos definidos y validación real.
+
+Durante esta migración y gracias a la orquestación de agentes no he escrito ni una sola línea de código.
+
+## Más que un cambio de framework, un cambio de enfoque
+
+El objetivo inicial era claro: integrar los posts existentes en el nuevo proyecto, con una sección de artículos recientes en la página principal y un flujo funcional para `/blog` y `/en/blog`.
+
+Antes de implementar, redacté un pequeño prompt explicando lo que quería. Indicando restricciones y como queria proceder.
+
+## Agentes con roles específicos
+
+En lugar de depender de un único asistente, dividí el trabajo en especialidades. Cada agente tuvo una responsabilidad concreta:
+
+- `Orchestrator`: Coordinó la interacción entre los agentes, asegurando que cada uno cumpliera su rol en el momento adecuado.
+- `Researcher`: Analizó ambos proyectos, identificó restricciones técnicas y preparó el terreno.
+- `Planner`: Traducía los objetivos en tareas ejecutables, organizadas por olas.
+- `Implementer`: Implementó los cambios: contenido MDX, esquemas, páginas y soporte multilenguaje.
+- `Reviewer`: Revisó la integración y detectó riesgos.
+- `Devops`: Gestionó integraciones, builds y validaciones.
+- `Browser-tester`: Validó la experiencia en navegador.
+- `Documentation-writer`: Mantuvo la documentación alineada con el progreso real.
+
+Esta división no solo agilizó el trabajo, sino que garantizó que cada paso tuviera un propósito claro.
+
+## Requisitos
+
+En el documento de requisitos se pusieron los principales requisitos:
+
+- Integrar los posts en esta web, migrando contenido (texto, imagenes, ...) para que se viese igual.
+- Mostrar artículos recientes en la página principal de mi portafolio.
+- Asegurar que `/blog` y `/en/blog` resolvieran correctamente el contenido por idioma. Esto es nuevo ya que antes solo estaban en Español.
+
+Mediante la orquestación y los diferentes agentes se fue resolviendo como hacer esto. Ademas de analizando como funcionaba anteriormente.
+
+Esto también es posible gracias a que contamos con MCPs como playwright que permiten recorrer webs mas facilmente.
+
+## Ejecución por olas
+
+La ejecución se organizó en tres etapas:
+
+1. Integraciones básicas: assets, i18n y estilos.
+2. Migración de contenido y modelo de datos.
+3. Validación funcional: listados, detalles por idioma y navegación.
+
+Este enfoque permitió paralelizar tareas, revisar dependencias y validar cada etapa de forma lógica.
+En los distintos pasos había varios agentes ejecutando sus tareas independientes
+
+## Validación centrada en la experiencia
+
+La validación final no se limitó a comprobar que el código compilara. Con `gem-browser-tester`, verifiqué que la experiencia en navegador cumpliera con lo esperado:
+
+- La página principal mostraba los posts recientes.
+- `/blog` y `/en/blog` resolvían correctamente los listados y detalles por idioma.
+
+Esto aseguró que el resultado final fuera funcional y coherente para los usuarios.
+
+## Donde deja esto al programador
+
+Es cierto que nuestro rol es muy diferente hoy que lo que era hace unos años. Ahora cada programador sube de nivel y se convierte en un lider de equipo técnico.
+
+Aun asi, jamas debemos olvidarnos de programar. Habra que debugear casos raros, auditar código o corregir cosas manualmente cuando el modelo no llegue.
+
+¿Nos quedaremos sin trabajo? Para nada, mas bien lo contrario. Bienvenidos a la era dorada de la informática. Donde podemos dejar los trabajos mas repetitivos para centrarnos en crear automatizaciones y código que antes no habria sido posible.

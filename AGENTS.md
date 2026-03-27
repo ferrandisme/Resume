@@ -1,0 +1,2 @@
+- Blog draft entries stay out of discovery surfaces; localized detail routes may still be generated for direct access and should set noindex.
+- Blog locale discovery only surfaces entries whose mirrored opposite-locale counterpart exists and is published; locale-switch and hreflang links should be omitted when that counterpart is missing or draft.

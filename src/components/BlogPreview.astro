@@ -1,0 +1,131 @@
+---
+import { getCollection } from "astro:content";
+import type { Locale } from "../i18n/config";
+import { getTranslations } from "../i18n/translations";
+import { filterDiscoveryVisibleEntries } from "../utils/blogCounterpart.ts";
+import { formatPublishedDate } from "../utils/format";
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getTranslations(lang);
+
+const allPosts = await getCollection("blog");
+const posts = filterDiscoveryVisibleEntries(allPosts, lang)
+  .sort(
+    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+  )
+  .slice(0, 3);
+
+const blogHref = lang === "es" ? "/blog" : "/en/blog";
+const postHref = (slug: string) =>
+  `${blogHref}/${slug.replace(new RegExp(`^${lang}/`), "")}`;
+---
+
+{
+  posts.length > 0 && (
+    <section class="section blog-preview" id="blog">
+      <div class="section-head">
+        <p class="eyebrow">Blog</p>
+        <h2>{t.blog.latestPosts}</h2>
+      </div>
+
+      <ul class="blog-preview-list">
+        {posts.map((post) => {
+          const title = lang === "es" ? post.data.title.es : post.data.title.en;
+          const summary =
+            lang === "es" ? post.data.summary?.es : post.data.summary?.en;
+          const date = formatPublishedDate(post.data.date, lang);
+          return (
+            <li>
+              <article class="card blog-preview-card reveal">
+                <p class="eyebrow">{date}</p>
+                <h3 class="blog-preview-title">
+                  <a href={postHref(post.slug)}>{title}</a>
+                </h3>
+                {summary && <p class="blog-preview-summary">{summary}</p>}
+                <a
+                  class="button button-ghost read-more"
+                  href={postHref(post.slug)}
+                >
+                  {t.blog.readMore} →
+                </a>
+              </article>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div class="blog-preview-footer">
+        <a class="button button-ghost" href={blogHref}>
+          {t.blog.viewAll} →
+        </a>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .blog-preview {
+    display: grid;
+    gap: 1.5rem;
+    scroll-margin-top: 6.5rem;
+  }
+
+  .blog-preview-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+
+  .blog-preview-card {
+    display: grid;
+    gap: 0.6rem;
+    padding: 1.25rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .blog-preview-card:hover {
+    border-color: var(--accent);
+  }
+
+  .blog-preview-title {
+    font-size: 1.15rem;
+    line-height: 1.3;
+  }
+
+  .blog-preview-title a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease;
+  }
+
+  .blog-preview-title a:hover {
+    color: var(--accent);
+  }
+
+  .blog-preview-summary {
+    color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .read-more {
+    justify-self: start;
+    font-size: 0.88rem;
+  }
+
+  .blog-preview-footer {
+    display: flex;
+    justify-content: flex-start;
+  }
+</style>

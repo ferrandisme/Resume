@@ -1,16 +1,21 @@
 ---
-import { getCollection } from 'astro:content';
-import { languageLevels, siteConfig, skillGroups } from '../data/site';
-import { getHomePath, getLocaleSwitchPath, localizeText, type Locale } from '../i18n/config';
-import { getTranslations } from '../i18n/translations';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { sortByOrderDesc, sortByYearDesc } from '../utils/format';
-import EducationItem from './EducationItem.astro';
-import ExperienceItem from './ExperienceItem.astro';
-import Hero from './Hero.astro';
-import ProjectCard from './ProjectCard.astro';
-import SectionBlock from './SectionBlock.astro';
-import SiteHeader from './SiteHeader.astro';
+import { getCollection } from "astro:content";
+import { languageLevels, siteConfig, skillGroups } from "../data/site";
+import {
+  getHomePath,
+  getLocaleSwitchPath,
+  localizeText,
+  type Locale,
+} from "../i18n/config";
+import { getTranslations } from "../i18n/translations";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { sortByOrderDesc, sortByYearDesc } from "../utils/format";
+import EducationItem from "./EducationItem.astro";
+import ExperienceItem from "./ExperienceItem.astro";
+import Hero from "./Hero.astro";
+import ProjectCard from "./ProjectCard.astro";
+import SectionBlock from "./SectionBlock.astro";
+import SiteHeader from "./SiteHeader.astro";
 
 interface Props {
   locale: Locale;
@@ -21,75 +26,82 @@ interface Props {
 const { locale, pathname, autoDetectLocale = false } = Astro.props;
 const t = getTranslations(locale);
 
-const projects = sortByYearDesc(await getCollection('projects'));
+const projects = sortByYearDesc(await getCollection("projects"));
 const featuredProjects = projects.filter((project) => project.data.featured);
-const experience = sortByOrderDesc(await getCollection('experience'));
-const education = sortByOrderDesc(await getCollection('education'));
+const experience = sortByOrderDesc(await getCollection("experience"));
+const education = sortByOrderDesc(await getCollection("education"));
 
 const navItems = [
-  { label: t.nav.home, href: '#top' },
-  { label: t.nav.projects, href: '#projects' },
-  { label: t.nav.experience, href: '#experience' },
-  { label: t.nav.education, href: '#education' },
-  { label: t.nav.skills, href: '#skills' },
-  { label: t.nav.contact, href: '#contact' },
+  { label: t.nav.home, href: "#top" },
+  { label: t.nav.projects, href: "#projects" },
+  { label: t.nav.experience, href: "#experience" },
+  { label: t.nav.education, href: "#education" },
+  { label: t.nav.skills, href: "#skills" },
+  { label: t.nav.contact, href: "#contact" },
+  { label: t.nav.blog, href: "#blog" },
 ];
 
 const localeSwitchHref = getLocaleSwitchPath(locale, pathname);
 const homeHref = getHomePath(locale);
 
-const esHome = new URL('/', siteConfig.siteUrl).toString();
-const enHome = new URL('/en/', siteConfig.siteUrl).toString();
+const esHome = new URL("/", siteConfig.siteUrl).toString();
+const enHome = new URL("/en/", siteConfig.siteUrl).toString();
 
 const personStructuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
+  "@context": "https://schema.org",
+  "@type": "Person",
   name: siteConfig.name,
-  givenName: 'Adrian',
-  familyName: 'Ferrandis Homsi',
-  alternateName: ['Adrian Ferrandis', 'Adrian Ferrandis Homsi'],
+  givenName: "Adrian",
+  familyName: "Ferrandis Homsi",
+  alternateName: ["Adrian Ferrandis", "Adrian Ferrandis Homsi"],
   jobTitle: siteConfig.role,
   url: siteConfig.siteUrl,
-  image: new URL('/og-adrian.svg', siteConfig.siteUrl).toString(),
+  image: new URL("/og-adrian.svg", siteConfig.siteUrl).toString(),
   address: {
-    '@type': 'PostalAddress',
-    addressLocality: 'Valencia',
-    addressCountry: 'ES',
+    "@type": "PostalAddress",
+    addressLocality: "Valencia",
+    addressCountry: "ES",
   },
   email: `mailto:${siteConfig.email}`,
-  sameAs: [siteConfig.social.github, siteConfig.social.linkedin, siteConfig.social.blog],
-  knowsLanguage: languageLevels.map((item) => localizeText(item.language, locale)),
+  sameAs: [
+    siteConfig.social.github,
+    siteConfig.social.linkedin,
+    siteConfig.social.blog,
+  ],
+  knowsLanguage: languageLevels.map((item) =>
+    localizeText(item.language, locale),
+  ),
   knowsAbout: [
-    'Java',
-    'Spring Boot',
-    'TypeScript',
-    'Angular',
-    'Next.js',
-    'Python',
-    'Machine Learning',
-    'AI coding agents',
+    "Java",
+    "Spring Boot",
+    "TypeScript",
+    "Angular",
+    "Next.js",
+    "Python",
+    "Machine Learning",
+    "AI coding agents",
   ],
 };
 
 const websiteStructuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
+  "@context": "https://schema.org",
+  "@type": "WebSite",
   name: siteConfig.name,
   url: siteConfig.siteUrl,
-  inLanguage: locale === 'es' ? ['es-ES', 'en-US'] : ['en-US', 'es-ES'],
+  inLanguage: locale === "es" ? ["es-ES", "en-US"] : ["en-US", "es-ES"],
 };
 ---
 
 <BaseLayout
   locale={locale}
   autoDetectLocale={autoDetectLocale}
-  title={locale === 'es' ? 'Portfolio' : 'Portfolio'}
+  title={locale === "es" ? "Portfolio" : "Portfolio"}
   description={localizeText(siteConfig.seo.description, locale)}
   canonical={new URL(pathname, siteConfig.siteUrl).toString()}
   alternates={[
-    { hreflang: 'es', href: esHome },
-    { hreflang: 'en', href: enHome },
-    { hreflang: 'x-default', href: enHome },
+    { hreflang: "es", href: esHome },
+    { hreflang: "en", href: enHome },
+    { hreflang: "x-default", href: enHome },
   ]}
   structuredData={[personStructuredData, websiteStructuredData]}
 >
@@ -110,20 +122,31 @@ const websiteStructuredData = {
         locale={locale}
         copy={t.hero}
         labels={{
-          linkedIn: 'LinkedIn',
-          github: 'GitHub',
+          linkedIn: "LinkedIn",
+          github: "GitHub",
           email: t.contact.email,
-          blog: 'Blog',
+          blog: "Blog",
         }}
       />
 
-      <SectionBlock id="about" eyebrow={t.about.eyebrow} title={t.about.title} intro={t.about.intro}>
+      <SectionBlock
+        id="about"
+        eyebrow={t.about.eyebrow}
+        title={t.about.title}
+        intro={t.about.intro}
+      >
         <div class="about-grid">
           <article class="card reveal">
-            {siteConfig.bio.map((paragraph, index) => (
-              <p style={index === 0 ? undefined : 'margin-top: 0.8rem;'}>{localizeText(paragraph, locale)}</p>
-            ))}
-            <p style="margin-top: 0.8rem; color: var(--muted);">{localizeText(siteConfig.openTo, locale)}</p>
+            {
+              siteConfig.bio.map((paragraph, index) => (
+                <p style={index === 0 ? undefined : "margin-top: 0.8rem;"}>
+                  {localizeText(paragraph, locale)}
+                </p>
+              ))
+            }
+            <p style="margin-top: 0.8rem; color: var(--muted);">
+              {localizeText(siteConfig.openTo, locale)}
+            </p>
           </article>
 
           <article class="card reveal">
@@ -135,58 +158,121 @@ const websiteStructuredData = {
         </div>
       </SectionBlock>
 
-      <SectionBlock id="projects" eyebrow={t.projects.eyebrow} title={t.projects.title} intro={t.projects.intro}>
+      <SectionBlock
+        id="projects"
+        eyebrow={t.projects.eyebrow}
+        title={t.projects.title}
+        intro={t.projects.intro}
+      >
         <div class="projects-grid">
-          {featuredProjects.map((project) => <ProjectCard project={project} locale={locale} copy={t.projects} />)}
+          {
+            featuredProjects.map((project) => (
+              <ProjectCard
+                project={project}
+                locale={locale}
+                copy={t.projects}
+              />
+            ))
+          }
         </div>
       </SectionBlock>
 
-      <SectionBlock id="experience" eyebrow={t.experience.eyebrow} title={t.experience.title} intro={t.experience.intro}>
+      <SectionBlock
+        id="experience"
+        eyebrow={t.experience.eyebrow}
+        title={t.experience.title}
+        intro={t.experience.intro}
+      >
         <div class="timeline">
-          {experience.map((item) => <ExperienceItem item={item} locale={locale} />)}
+          {
+            experience.map((item) => (
+              <ExperienceItem item={item} locale={locale} />
+            ))
+          }
         </div>
       </SectionBlock>
 
-      <SectionBlock id="education" eyebrow={t.education.eyebrow} title={t.education.title} intro={t.education.intro}>
+      <SectionBlock
+        id="education"
+        eyebrow={t.education.eyebrow}
+        title={t.education.title}
+        intro={t.education.intro}
+      >
         <div class="timeline">
-          {education.map((item) => <EducationItem item={item} locale={locale} />)}
+          {
+            education.map((item) => (
+              <EducationItem item={item} locale={locale} />
+            ))
+          }
         </div>
       </SectionBlock>
 
-      <SectionBlock id="skills" eyebrow={t.skills.eyebrow} title={t.skills.title} intro={t.skills.intro}>
+      <SectionBlock
+        id="skills"
+        eyebrow={t.skills.eyebrow}
+        title={t.skills.title}
+        intro={t.skills.intro}
+      >
         <div class="skills-grid">
-          {skillGroups.map((group) => (
-            <article class="card reveal">
-              <h3 style="margin-bottom: 0.7rem;">{localizeText(group.title, locale)}</h3>
-              <ul class="chip-list">
-                {group.items.map((item) => <li>{localizeText(item, locale)}</li>)}
-              </ul>
-            </article>
-          ))}
+          {
+            skillGroups.map((group) => (
+              <article class="card reveal">
+                <h3 style="margin-bottom: 0.7rem;">
+                  {localizeText(group.title, locale)}
+                </h3>
+                <ul class="chip-list">
+                  {group.items.map((item) => (
+                    <li>{localizeText(item, locale)}</li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
         </div>
 
         <article class="card reveal" style="margin-top: 1rem;">
           <h3 style="margin-bottom: 0.8rem;">{t.skills.languages}</h3>
           <ul class="language-list">
-            {languageLevels.map((item) => (
-              <li>
-                <span>{localizeText(item.language, locale)}</span>
-                <span>{localizeText(item.level, locale)}</span>
-              </li>
-            ))}
+            {
+              languageLevels.map((item) => (
+                <li>
+                  <span>{localizeText(item.language, locale)}</span>
+                  <span>{localizeText(item.level, locale)}</span>
+                </li>
+              ))
+            }
           </ul>
         </article>
       </SectionBlock>
 
-      <SectionBlock id="contact" eyebrow={t.contact.eyebrow} title={t.contact.title} intro={t.contact.intro}>
+      <slot />
+
+      <SectionBlock
+        id="contact"
+        eyebrow={t.contact.eyebrow}
+        title={t.contact.title}
+        intro={t.contact.intro}
+      >
         <article class="card contact-card reveal">
           <p>{siteConfig.email}</p>
           <div class="contact-actions">
-            <a class="button button-primary" href={`mailto:${siteConfig.email}`}>{t.contact.email}</a>
-            <a class="button button-ghost" href={siteConfig.social.linkedin} target="_blank" rel="noreferrer">
+            <a class="button button-primary" href={`mailto:${siteConfig.email}`}
+              >{t.contact.email}</a
+            >
+            <a
+              class="button button-ghost"
+              href={siteConfig.social.linkedin}
+              target="_blank"
+              rel="noreferrer"
+            >
               {t.contact.linkedin}
             </a>
-            <a class="button button-ghost" href={siteConfig.social.github} target="_blank" rel="noreferrer">
+            <a
+              class="button button-ghost"
+              href={siteConfig.social.github}
+              target="_blank"
+              rel="noreferrer"
+            >
               {t.contact.github}
             </a>
           </div>
@@ -196,7 +282,8 @@ const websiteStructuredData = {
 
     <footer class="footer">
       <p>
-        © {new Date().getFullYear()} {siteConfig.name}. {t.footer.rights}
+        © {new Date().getFullYear()}
+        {siteConfig.name}. {t.footer.rights}
       </p>
     </footer>
   </div>

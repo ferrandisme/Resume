@@ -1,12 +1,14 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import mdx from "@astrojs/mdx";
+import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://ferrandis.me',
+  site: "https://ferrandis.me",
+  integrations: [mdx()],
   i18n: {
-    defaultLocale: 'es',
-    locales: ['es', 'en'],
+    defaultLocale: "es",
+    locales: ["es", "en"],
     routing: {
       prefixDefaultLocale: false,
     },

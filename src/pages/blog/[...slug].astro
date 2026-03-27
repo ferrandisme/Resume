@@ -1,0 +1,261 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import { siteConfig } from "../../data/site";
+import { getHomePath } from "../../i18n/config";
+import { getTranslations } from "../../i18n/translations";
+import { createBlogCounterpartLookup } from "../../utils/blogCounterpart";
+import { formatPublishedDate } from "../../utils/format";
+
+export async function getStaticPaths() {
+  const esPrefix = "es/";
+  const posts = await getCollection("blog", ({ id }) =>
+    id.startsWith(esPrefix),
+  );
+
+  return posts.map((post) => ({
+    params: {
+      slug: post.slug.startsWith(esPrefix)
+        ? post.slug.slice(esPrefix.length)
+        : post.slug,
+    },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const t = getTranslations("es");
+const allPosts = await getCollection("blog");
+const counterpartInfo =
+  createBlogCounterpartLookup(allPosts).getCounterpartInfo(post);
+const localeSwitchHref = counterpartInfo.hasPublishableCounterpart
+  ? `/en/blog/${counterpartInfo.relativePath}`
+  : undefined;
+const counterpartAlternateHref = counterpartInfo.hasPublishableCounterpart
+  ? new URL(
+      `/en/blog/${counterpartInfo.relativePath}`,
+      siteConfig.siteUrl,
+    ).toString()
+  : undefined;
+const alternates = [
+  {
+    hreflang: "es",
+    href: new URL(Astro.url.pathname, siteConfig.siteUrl).toString(),
+  },
+  ...(counterpartAlternateHref
+    ? [
+        {
+          hreflang: "en",
+          href: counterpartAlternateHref,
+        },
+      ]
+    : []),
+];
+
+const title = post.data.title.es;
+const summary = post.data.summary?.es;
+const date = formatPublishedDate(post.data.date, "es");
+
+const navItems = [
+  { label: t.nav.home, href: "/" },
+  { label: t.nav.blog, href: "/blog" },
+];
+---
+
+<BaseLayout
+  locale="es"
+  title={title}
+  description={summary}
+  noindex={post.data.draft}
+  canonical={new URL(Astro.url.pathname, siteConfig.siteUrl).toString()}
+  alternates={alternates}
+>
+  <div class="page-shell">
+    <SiteHeader
+      locale="es"
+      navItems={navItems}
+      homeHref={getHomePath("es")}
+      localeSwitchHref={localeSwitchHref}
+      localeSwitchLabel={t.localeSwitch}
+      themeCopy={t.theme}
+    />
+
+    <main id="main-content" class="blog-post-main">
+      <a class="button button-ghost back-link" href="/blog"
+        >{t.blog.backToBlog}</a
+      >
+
+      <article class="card blog-post-article">
+        <header class="blog-post-header">
+          <p class="eyebrow">{t.blog.publishedOn} {date}</p>
+          <h1 class="blog-post-title">{title}</h1>
+          {summary && <p class="blog-post-summary">{summary}</p>}
+          {
+            post.data.tags.length > 0 && (
+              <ul class="chip-list blog-tags">
+                {post.data.tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
+            )
+          }
+        </header>
+        <div class="blog-content">
+          <Content />
+        </div>
+      </article>
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-post-main {
+    margin-top: 2rem;
+    display: grid;
+    gap: 1.5rem;
+    max-width: 780px;
+    margin-inline: auto;
+  }
+
+  .back-link {
+    justify-self: start;
+  }
+
+  .blog-post-article {
+    display: grid;
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  .blog-post-header {
+    display: grid;
+    gap: 0.75rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .blog-post-title {
+    font-size: clamp(1.6rem, 3vw, 2.5rem);
+    line-height: 1.15;
+  }
+
+  .blog-post-summary {
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .blog-tags li {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .blog-content {
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+
+  .blog-content :global(h1),
+  .blog-content :global(h2),
+  .blog-content :global(h3),
+  .blog-content :global(h4) {
+    margin-top: 2rem;
+    margin-bottom: 0.6rem;
+    font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+  }
+
+  .blog-content :global(h1) {
+    font-size: 1.8rem;
+  }
+  .blog-content :global(h2) {
+    font-size: 1.4rem;
+  }
+  .blog-content :global(h3) {
+    font-size: 1.2rem;
+  }
+
+  .blog-content :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  .blog-content :global(ul),
+  .blog-content :global(ol) {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .blog-content :global(li) {
+    margin-bottom: 0.35rem;
+  }
+
+  .blog-content :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .blog-content :global(a:hover) {
+    color: var(--accent-strong);
+  }
+
+  .blog-content :global(blockquote) {
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+    color: var(--muted);
+    margin: 1.5rem 0;
+    font-style: italic;
+  }
+
+  .blog-content :global(img) {
+    max-width: 100%;
+    border-radius: var(--radius-md);
+    margin: 1.5rem auto;
+  }
+
+  .blog-content :global(pre) {
+    margin: 1.5rem 0;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .blog-content :global(code:not(pre code)) {
+    padding: 0.15em 0.4em;
+    border-radius: 0.25rem;
+    background: var(--surface-strong);
+    font-size: 0.875em;
+  }
+
+  .blog-content :global(hr) {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 2rem 0;
+  }
+
+  .blog-content :global(strong) {
+    font-weight: 700;
+  }
+
+  .blog-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+  }
+
+  .blog-content :global(th),
+  .blog-content :global(td) {
+    border: 1px solid var(--line);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+
+  .blog-content :global(th) {
+    background: var(--surface-strong);
+    font-weight: 700;
+  }
+</style>

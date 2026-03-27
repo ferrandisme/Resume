@@ -1,19 +1,25 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, z } from "astro:content";
 
 const localizedString = z.object({
   es: z.string(),
   en: z.string(),
 });
 
+const localizedStringCompat = z
+  .union([localizedString, z.string()])
+  .transform((value) =>
+    typeof value === "string" ? { es: value, en: value } : value,
+  );
+
 const projects = defineCollection({
-  type: 'content',
+  type: "content",
   schema: z.object({
     title: localizedString,
     summary: localizedString,
     year: z.number(),
     yearLabel: z.string().optional(),
     hideStatus: z.boolean().default(false),
-    status: z.enum(['completed', 'in-progress', 'hackathon']),
+    status: z.enum(["completed", "in-progress", "hackathon"]),
     stack: z.array(z.string()),
     featured: z.boolean().default(false),
     order: z.number().default(0),
@@ -26,7 +32,7 @@ const projects = defineCollection({
 });
 
 const experience = defineCollection({
-  type: 'content',
+  type: "content",
   schema: z.object({
     company: z.string(),
     role: localizedString,
@@ -41,7 +47,7 @@ const experience = defineCollection({
 });
 
 const education = defineCollection({
-  type: 'content',
+  type: "content",
   schema: z.object({
     institution: z.string(),
     degree: localizedString,
@@ -54,8 +60,20 @@ const education = defineCollection({
   }),
 });
 
+const blog = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: localizedStringCompat,
+    date: z.string(),
+    summary: localizedStringCompat.optional(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
 export const collections = {
   projects,
   experience,
   education,
+  blog,
 };

@@ -1,5 +1,8 @@
 ---
-import PortfolioPage from '../../components/PortfolioPage.astro';
+import PortfolioPage from "../../components/PortfolioPage.astro";
+import BlogPreview from "../../components/BlogPreview.astro";
 ---
 
-<PortfolioPage locale="en" pathname={Astro.url.pathname} />
+<PortfolioPage locale="en" pathname={Astro.url.pathname}>
+  <BlogPreview lang="en" />
+</PortfolioPage>

@@ -1,12 +1,13 @@
 ---
-import type { Locale } from '../i18n/config';
-import ThemeToggle from './ThemeToggle.astro';
+import type { Locale } from "../i18n/config";
+import { getTranslations } from "../i18n/translations";
+import ThemeToggle from "./ThemeToggle.astro";
 
 interface Props {
   locale: Locale;
   navItems: Array<{ label: string; href: string }>;
   homeHref: string;
-  localeSwitchHref: string;
+  localeSwitchHref?: string;
   localeSwitchLabel: string;
   themeCopy: {
     toggle: string;
@@ -15,10 +16,25 @@ interface Props {
   };
 }
 
-const { locale, navItems, homeHref, localeSwitchHref, localeSwitchLabel, themeCopy } = Astro.props;
-const homeAriaLabel = locale === 'es' ? 'Ir al inicio' : 'Go to home';
-const navAriaLabel = locale === 'es' ? 'Principal' : 'Main';
-const expandMenuLabel = locale === 'es' ? 'Abrir menú' : 'Open menu';
+const {
+  locale,
+  navItems,
+  homeHref,
+  localeSwitchHref,
+  localeSwitchLabel,
+  themeCopy,
+} = Astro.props;
+const t = getTranslations(locale);
+const blogHref = locale === "en" ? "/en/blog" : "/blog";
+const hasBlogNavItem = navItems.some(
+  (item) => item.href === blogHref || item.href === "#blog",
+);
+const resolvedNavItems = hasBlogNavItem
+  ? navItems
+  : [...navItems, { label: t.nav.blog, href: blogHref }];
+const homeAriaLabel = locale === "es" ? "Ir al inicio" : "Go to home";
+const navAriaLabel = locale === "es" ? "Principal" : "Main";
+const expandMenuLabel = locale === "es" ? "Abrir menú" : "Open menu";
 ---
 
 <header class="site-header" data-site-header>
@@ -30,9 +46,11 @@ const expandMenuLabel = locale === 'es' ? 'Abrir menú' : 'Open menu';
   <nav aria-label={navAriaLabel}>
     <ul>
       {
-        navItems.map((item) => (
+        resolvedNavItems.map((item) => (
           <li>
-            <a href={item.href} data-section-link>{item.label}</a>
+            <a href={item.href} data-section-link>
+              {item.label}
+            </a>
           </li>
         ))
       }
@@ -40,40 +58,53 @@ const expandMenuLabel = locale === 'es' ? 'Abrir menú' : 'Open menu';
   </nav>
 
   <div class="header-actions">
-    <ThemeToggle label={themeCopy.toggle} lightText={themeCopy.light} darkText={themeCopy.dark} />
-    <a
-      class="locale-switch"
-      href={localeSwitchHref}
-      hreflang={localeSwitchLabel.toLowerCase()}
-      data-locale-switch
-    >
-      {localeSwitchLabel}
-    </a>
+    <ThemeToggle
+      label={themeCopy.toggle}
+      lightText={themeCopy.light}
+      darkText={themeCopy.dark}
+    />
+    {
+      localeSwitchHref && (
+        <a
+          class="locale-switch"
+          href={localeSwitchHref}
+          hreflang={localeSwitchLabel.toLowerCase()}
+          data-locale-switch
+        >
+          {localeSwitchLabel}
+        </a>
+      )
+    }
   </div>
 </header>
 
-<button class="header-peek" type="button" aria-label={expandMenuLabel} data-header-peek>
+<button
+  class="header-peek"
+  type="button"
+  aria-label={expandMenuLabel}
+  data-header-peek
+>
   <span aria-hidden="true">☰</span>
 </button>
 
 <script is:inline>
   (() => {
-    const header = document.querySelector('[data-site-header]');
+    const header = document.querySelector("[data-site-header]");
     if (!(header instanceof HTMLElement)) return;
-    const peekButton = document.querySelector('[data-header-peek]');
+    const peekButton = document.querySelector("[data-header-peek]");
     const canUsePeekButton = peekButton instanceof HTMLButtonElement;
 
-    const localeLink = header.querySelector('[data-locale-switch]');
+    const localeLink = header.querySelector("[data-locale-switch]");
     if (localeLink instanceof HTMLAnchorElement) {
-      localeLink.addEventListener('click', () => {
-        const href = localeLink.getAttribute('href') || '';
-        const targetLocale = href.startsWith('/en') ? 'en' : 'es';
-        localStorage.setItem('locale', targetLocale);
+      localeLink.addEventListener("click", () => {
+        const href = localeLink.getAttribute("href") || "";
+        const targetLocale = href.startsWith("/en") ? "en" : "es";
+        localStorage.setItem("locale", targetLocale);
       });
     }
 
-    const mobileQuery = window.matchMedia('(max-width: 960px)');
-    const hiddenClass = 'site-header-hidden';
+    const mobileQuery = window.matchMedia("(max-width: 960px)");
+    const hiddenClass = "site-header-hidden";
     let lastScrollY = window.scrollY;
     let ticking = false;
     let isAnchorNavigating = false;
@@ -90,9 +121,9 @@ const expandMenuLabel = locale === 'es' ? 'Abrir menú' : 'Open menu';
     const setPeekVisible = (visible) => {
       if (!canUsePeekButton) return;
       const shouldShow = mobileQuery.matches && visible;
-      peekButton.classList.toggle('is-visible', shouldShow);
+      peekButton.classList.toggle("is-visible", shouldShow);
       peekButton.tabIndex = shouldShow ? 0 : -1;
-      peekButton.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+      peekButton.setAttribute("aria-hidden", shouldShow ? "false" : "true");
     };
 
     const setHeaderHidden = (hidden) => {
@@ -111,7 +142,10 @@ const expandMenuLabel = locale === 'es' ? 'Abrir menú' : 'Open menu';
     const isAnchorNavigationDone = (currentY) => {
       if (!isAnchorNavigating) return false;
       if (Date.now() > anchorNavUntil) return true;
-      return Number.isFinite(anchorTargetY) && Math.abs(currentY - anchorTargetY) <= 16;
+      return (
+        Number.isFinite(anchorTargetY) &&
+        Math.abs(currentY - anchorTargetY) <= 16
+      );
     };
 
     const finishAnchorNavigation = () => {
@@ -165,20 +199,22 @@ const expandMenuLabel = locale === 'es' ? 'Abrir menú' : 'Open menu';
       });
     };
 
-    const sectionLinks = header.querySelectorAll('a[data-section-link][href^="#"]');
+    const sectionLinks = header.querySelectorAll(
+      'a[data-section-link][href^="#"]',
+    );
     sectionLinks.forEach((link) => {
       if (!(link instanceof HTMLAnchorElement)) return;
 
-      link.addEventListener('click', (event) => {
-        const href = link.getAttribute('href') || '';
-        if (href === '#top') {
+      link.addEventListener("click", (event) => {
+        const href = link.getAttribute("href") || "";
+        if (href === "#top") {
           resetAnchorNavigation();
           waitForUserIntent = false;
           setHeaderHidden(false);
           event.preventDefault();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          if (typeof history.replaceState === 'function') {
-            history.replaceState(null, '', '#top');
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          if (typeof history.replaceState === "function") {
+            history.replaceState(null, "", "#top");
           }
           return;
         }
@@ -187,7 +223,9 @@ const expandMenuLabel = locale === 'es' ? 'Abrir menú' : 'Open menu';
 
         const target = document.querySelector(href);
         const targetY =
-          target instanceof HTMLElement ? target.getBoundingClientRect().top + window.scrollY : Number.NaN;
+          target instanceof HTMLElement
+            ? target.getBoundingClientRect().top + window.scrollY
+            : Number.NaN;
 
         isAnchorNavigating = true;
         anchorTargetY = targetY;
@@ -198,7 +236,7 @@ const expandMenuLabel = locale === 'es' ? 'Abrir menú' : 'Open menu';
       });
     });
 
-    header.addEventListener('focusin', () => {
+    header.addEventListener("focusin", () => {
       resetAnchorNavigation();
       waitForUserIntent = false;
       setHeaderHidden(false);
@@ -211,19 +249,19 @@ const expandMenuLabel = locale === 'es' ? 'Abrir menú' : 'Open menu';
       lastScrollY = window.scrollY;
     };
 
-    if (typeof mobileQuery.addEventListener === 'function') {
-      mobileQuery.addEventListener('change', onMediaChange);
+    if (typeof mobileQuery.addEventListener === "function") {
+      mobileQuery.addEventListener("change", onMediaChange);
     } else {
       mobileQuery.addListener(onMediaChange);
     }
 
-    window.addEventListener('touchstart', onUserIntent, { passive: true });
-    window.addEventListener('pointerdown', onUserIntent, { passive: true });
-    window.addEventListener('wheel', onUserIntent, { passive: true });
-    window.addEventListener('keydown', onUserIntent);
+    window.addEventListener("touchstart", onUserIntent, { passive: true });
+    window.addEventListener("pointerdown", onUserIntent, { passive: true });
+    window.addEventListener("wheel", onUserIntent, { passive: true });
+    window.addEventListener("keydown", onUserIntent);
 
     if (canUsePeekButton) {
-      peekButton.addEventListener('click', () => {
+      peekButton.addEventListener("click", () => {
         resetAnchorNavigation();
         waitForUserIntent = false;
         setHeaderHidden(false);
@@ -231,7 +269,7 @@ const expandMenuLabel = locale === 'es' ? 'Abrir menú' : 'Open menu';
       setPeekVisible(false);
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     updateHeaderVisibility();
   })();
 </script>

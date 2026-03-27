@@ -1,0 +1,175 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import SiteHeader from "../../../components/SiteHeader.astro";
+import { siteConfig } from "../../../data/site";
+import { getHomePath } from "../../../i18n/config";
+import { getTranslations } from "../../../i18n/translations";
+import { filterDiscoveryVisibleEntries } from "../../../utils/blogCounterpart.ts";
+
+const t = getTranslations("en");
+
+const allPosts = await getCollection("blog");
+const posts = filterDiscoveryVisibleEntries(allPosts, "en").sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+);
+
+const getLocalizedSlug = (slug: string) => slug.replace(/^en\//, "");
+
+const navItems = [
+  { label: t.nav.home, href: "/en/" },
+  { label: t.nav.blog, href: "/en/blog" },
+];
+---
+
+<BaseLayout
+  locale="en"
+  title={t.blog.title}
+  canonical={new URL("/en/blog", siteConfig.siteUrl).toString()}
+  alternates={[
+    {
+      hreflang: "en",
+      href: new URL("/en/blog", siteConfig.siteUrl).toString(),
+    },
+    { hreflang: "es", href: new URL("/blog", siteConfig.siteUrl).toString() },
+  ]}
+>
+  <div class="page-shell">
+    <SiteHeader
+      locale="en"
+      navItems={navItems}
+      homeHref={getHomePath("en")}
+      localeSwitchHref="/blog"
+      localeSwitchLabel={t.localeSwitch}
+      themeCopy={t.theme}
+    />
+
+    <main id="main-content" class="blog-list-main">
+      <header class="blog-list-header">
+        <p class="eyebrow">Blog</p>
+        <h1>{t.blog.title}</h1>
+      </header>
+
+      {
+        posts.length === 0 ? (
+          <p class="no-posts">{t.blog.noPosts}</p>
+        ) : (
+          <ul class="blog-list">
+            {posts.map((post) => {
+              const date = new Date(post.data.date).toLocaleDateString(
+                "en-US",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                },
+              );
+              const localizedSlug = getLocalizedSlug(post.slug);
+              return (
+                <li>
+                  <article class="card blog-list-card">
+                    <p class="eyebrow">
+                      {t.blog.publishedOn} {date}
+                    </p>
+                    <h2 class="blog-list-title">
+                      <a href={`/en/blog/${localizedSlug}`}>
+                        {post.data.title.en}
+                      </a>
+                    </h2>
+                    {post.data.summary?.en && (
+                      <p class="blog-list-summary">{post.data.summary.en}</p>
+                    )}
+                    {post.data.tags.length > 0 && (
+                      <ul class="chip-list blog-tags" aria-label={t.blog.tags}>
+                        {post.data.tags.map((tag) => (
+                          <li>{tag}</li>
+                        ))}
+                      </ul>
+                    )}
+                    <a
+                      class="button button-ghost read-more"
+                      href={`/en/blog/${localizedSlug}`}
+                    >
+                      {t.blog.readMore} →
+                    </a>
+                  </article>
+                </li>
+              );
+            })}
+          </ul>
+        )
+      }
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-list-main {
+    margin-top: 2rem;
+    display: grid;
+    gap: 2rem;
+    max-width: 780px;
+    margin-inline: auto;
+  }
+
+  .blog-list-header {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .blog-list-header h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+
+  .blog-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  .blog-list-card {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.5rem;
+  }
+
+  .blog-list-title {
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: 1.25;
+  }
+
+  .blog-list-title a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease;
+  }
+
+  .blog-list-title a:hover {
+    color: var(--accent);
+  }
+
+  .blog-list-summary {
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .blog-tags li {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .read-more {
+    justify-self: start;
+    font-size: 0.88rem;
+  }
+
+  .no-posts {
+    color: var(--muted);
+    font-style: italic;
+  }
+</style>

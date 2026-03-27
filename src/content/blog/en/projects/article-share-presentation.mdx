@@ -1,0 +1,198 @@
+---
+title: "ArticlesShare: Knowledge Sharing Platform"
+date: "2026-02-08"
+tags: ["ArticlesShare", "typescript", "nextjs", "project"]
+draft: false
+summary: "ArticlesShare is a collaborative platform designed for teams to share, discover, and discuss articles in an organized way, featuring advanced search, notifications, and weekly summaries."
+---
+
+## 🌟 Introduction
+
+Today, I want to share my latest project: ArticlesShare, a platform born out of the need to centralize and share knowledge within work teams. In this article, I will describe how I created this tool, its main features, the challenges I faced, and where the project is headed.
+
+## 💡 What is ArticlesShare?
+
+ArticlesShare is a web application that allows teams to share, discover, and discuss interesting articles. With this tool, teams can share articles in an organized way, as it includes features like a search engine and email notifications.
+
+![ArticlesShare cover image](/static/images/2025-06/articles-share-main-image.png)
+
+## ✨ Main Features
+
+### 1️⃣ Share and Discover Articles
+
+**The core of the platform is the ability to share articles with your team.** Each article includes:
+
+- A descriptive title
+- A URL to the original content
+- A description to contextualize why it is relevant
+- Tags to classify and facilitate searches
+
+All of this can be customized during creation and edited later.
+
+<img
+  src="/static/images/2025-06/articles-share-article-edit-form.png"
+  alt="Article edit form"
+  width="75%"
+/>
+
+### 2️⃣ Rich Commenting System
+
+Expanding knowledge beyond the initial text is important. For this reason, **each article has its own comment section** where team members can discuss its content using rich text (bold, italics, lists, etc.).
+
+![Comments on an article](/static/images/2025-06/articles-share-comments.png)
+
+Additionally, before entering an article, you can see how many comments it has.
+
+### 3️⃣ Advanced Search
+
+Finding relevant content is essential, so I implemented a search system that allows filtering by various fields. For example:
+
+- Text in titles and descriptions
+- Specific tags
+- Work team
+
+### 4️⃣ Notifications
+
+To keep everyone up to date, the platform includes a **notification system** that alerts users when:
+
+- Someone comments on an article you shared
+- Someone comments on an article where you also commented
+
+These appear visually when you log into the platform.
+
+### 5️⃣ Weekly Newsletter
+
+One of the most appreciated features is the **automatic weekly summary.** The system:
+
+1. Collects all articles shared during the week
+2. Generates a well-formatted document
+3. Creates a URL to view the latest articles of the week on the web
+4. Shares it via email and Google Drive
+
+Additionally, the email allows you to access both links, see how many new articles were shared that week, and unsubscribe from the weekly mailing.
+
+![Weekly summary email example](/static/images/2025-06/articles-share-mail.jpeg)
+
+### 6️⃣ User Profiles
+
+Each member has their own profile where they can:
+
+- View the articles they have shared
+- Edit or delete their contributions
+- Copy articles in a shareable format for other platforms
+
+![User profile screenshot](/static/images/2025-06/articles-share-profile.png)
+
+### 7️⃣ Admin Panel
+
+The platform includes an admin panel where you can:
+
+- Fully manage users: view, create, edit, delete, etc.
+
+![Admin user management panel](/static/images/2025-06/articles-share-admin-users.png)
+
+- Send emails. In addition to the newsletter, this tool allows you to create communications easily.
+
+First, select the recipients:
+
+![Admin panel select email recipients](/static/images/2025-06/articles-share-admin-mail1.png)
+
+Then use an interactive drag-and-drop template system to customize styles, text, format, etc.
+
+![Admin panel create email template](/static/images/2025-06/articles-share-admin-mail2.png)
+
+## 🧩 Development Process
+
+### Inspiration and Planning
+
+It all started with a base project I had previously developed for sharing prompts. This project was built following a YouTube tutorial. The original project had certain issues to resolve and improve. The initial work focused on addressing these "to-dos" and transforming what was a demo into the first MVP for articles. **The first version was developed in a day of intense but highly satisfying work.**
+
+### Technology Stack
+
+The decision to use Next.js was key: I wanted a solution that allowed me to develop both the frontend and backend in an integrated way, with good performance and flexibility. Additionally, it was a technology I was already familiar with and had the base mentioned earlier. I complemented this with:
+
+- TailwindCSS for adaptive and elegant design
+- MongoDB to store most data (users, articles, ...)
+- Redis for the comment system (greater speed and flexibility)
+- Supabase for the notification system (I wanted something separate for this system)
+- SendGrid for email delivery
+
+I also relied heavily on Copilot to assist in product development.
+
+##### Iterative Development
+
+I adopted an incremental approach, starting with essential features:
+
+- Authentication system
+- Basic CRUD for articles
+- Search system
+
+And later implementing others such as:
+
+- Comments
+- Notifications
+- Weekly summary system
+- Migration to TypeScript
+- Admin panel
+- Newsletter subscription management
+- Visual improvements (like placeholders while content loads)
+
+**In each phase, I tested functionality with real users to get early feedback. Seeing your project grow and people using it generates a certain excitement.**
+
+#### 🔥 Challenges Faced
+
+##### Search Optimization
+
+One of the biggest challenges was creating a search system that was both efficient and flexible. Users needed fast results even with a growing database. The solution was to implement:
+
+- Indexed search
+- Optimized tag filtering
+- Real-time results with progressive loading (pagination)
+- Using different databases to reduce loads
+
+##### Document Generation and Distribution
+
+Automating the creation of weekly summaries was particularly challenging. It required:
+
+- Collecting articles with their metadata
+- Generating well-formatted documents
+- Integrating with Google Drive for sharing
+- Ensuring emails met the requirements of various email providers
+
+For the latter, I had to use an external email service. Thanks to this and setting up my own domain (in addition to creating a good email template), I achieved this goal.
+
+#### 🚀 Future Work
+
+ArticlesShare is still an evolving project. I have ideas noted down that I want to continue working on. In the end, the project is still in prerelease and has room to grow.
+
+## 📊 Impact and Results
+
+Since its implementation, ArticlesShare has:
+
+- Centralized over 200 articles that would otherwise be scattered
+- Reduced the time to find relevant information
+- Enabled content enrichment through a comment system
+- Simplified content dissemination through its various utilities, such as the newsletter
+
+Thanks to this project, it has been possible to help expand people's training and knowledge.
+
+## 💰 Project Costs
+
+I have managed to keep everything at €0 per month, only my effort (but not my wallet). All the hosting I use is free. This includes:
+
+- Web hosting
+- 3 databases
+- Email service
+- Cloud storage
+
+## 🤖 The Impact of AI
+
+I have extensively used AI to develop this product. The original base was programmed without AI, but from there, it has been used to build new features. While it is far from being able to do everything for me, I have noticed that sometimes I had more of a specifier/supervisor role than a programmer. It all depends on the task, but for less complex ones, it performed quite well.
+
+For now, I am not worried about being replaced as it is very dependent on me. If you are interested in this, I will write another post about it on the blog.
+
+## 🏁 Conclusion
+
+ArticlesShare started as a solution to a specific problem and has evolved into an interesting tool for sharing knowledge. The journey has not been easy, but every problem I have faced has taught me more.
+
+Without a doubt, I hope to continue sharing more information about this project with you.

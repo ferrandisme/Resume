@@ -1,4 +1,4 @@
-import type { Locale } from './config';
+import type { Locale } from "./config";
 
 export type TranslationKey = {
   htmlLang: string;
@@ -9,6 +9,7 @@ export type TranslationKey = {
     education: string;
     skills: string;
     contact: string;
+    blog: string;
   };
   hero: {
     eyebrow: string;
@@ -83,196 +84,239 @@ export type TranslationKey = {
     article: string;
     demo: string;
   };
+  blog: {
+    title: string;
+    latestPosts: string;
+    readMore: string;
+    backToBlog: string;
+    publishedOn: string;
+    tags: string;
+    noPosts: string;
+    viewAll: string;
+  };
 };
 
 const translations: Record<Locale, TranslationKey> = {
   es: {
-    htmlLang: 'es',
+    htmlLang: "es",
     nav: {
-      home: 'Inicio',
-      projects: 'Proyectos',
-      experience: 'Experiencia',
-      education: 'Educación',
-      skills: 'Stack',
-      contact: 'Contacto',
+      home: "Inicio",
+      projects: "Proyectos",
+      experience: "Experiencia",
+      education: "Educación",
+      skills: "Stack",
+      contact: "Contacto",
+      blog: "Blog",
     },
     hero: {
-      eyebrow: 'Software Engineering · Full Stack · Product mindset',
-      roleLine: 'Software Engineer en',
-      ctaProjects: 'Ver proyectos',
-      ctaContact: 'Contactar',
-      panelTitle: 'Resumen rápido',
+      eyebrow: "Software Engineering · Full Stack · Product mindset",
+      roleLine: "Software Engineer en",
+      ctaProjects: "Ver proyectos",
+      ctaContact: "Contactar",
+      panelTitle: "Resumen rápido",
       panelItems: [
-        'Conocimiento sólido de Java/Spring y TypeScript, con experiencia full stack en frontend y backend.',
-        'Trabajo habitual con SQL y NoSQL en producto real.',
-        'Python aplicado a IA/Machine Learning y varios años usando agentes de IA para generación de código.',
+        "Conocimiento sólido de Java/Spring y TypeScript, con experiencia full stack en frontend y backend.",
+        "Trabajo habitual con SQL y NoSQL en producto real.",
+        "Python aplicado a IA/Machine Learning y varios años usando agentes de IA para generación de código.",
       ],
     },
     about: {
-      eyebrow: 'Sobre mí',
-      title: 'Construyo software útil, mantenible y orientado a negocio',
-      intro: 'Trabajo con una mentalidad pragmática: decisiones técnicas claras, foco en impacto y arquitectura preparada para evolucionar.',
-      highlightsTitle: 'Qué aporto al equipo',
+      eyebrow: "Sobre mí",
+      title: "Construyo software útil, mantenible y orientado a negocio",
+      intro:
+        "Trabajo con una mentalidad pragmática: decisiones técnicas claras, foco en impacto y arquitectura preparada para evolucionar.",
+      highlightsTitle: "Qué aporto al equipo",
       highlights: [
-        'Diseño técnico robusto y sostenible a largo plazo.',
-        'Capacidad de ejecución de extremo a extremo en producto.',
-        'Uso continuo de frameworks TypeScript en frontend y backend.',
-        'Experiencia práctica con Python, IA y agentes de código.',
-        'Comunicación clara entre negocio y tecnología.',
+        "Diseño técnico robusto y sostenible a largo plazo.",
+        "Capacidad de ejecución de extremo a extremo en producto.",
+        "Uso continuo de frameworks TypeScript en frontend y backend.",
+        "Experiencia práctica con Python, IA y agentes de código.",
+        "Comunicación clara entre negocio y tecnología.",
       ],
     },
     projects: {
-      eyebrow: 'Portfolio',
-      title: 'Proyectos seleccionados',
-      intro: 'Casos donde combino todas mis capacidades de ingeniería del software para crear productos.',
-      detail: 'Detalle',
-      code: 'Código',
-      article: 'Artículo',
-      demo: 'Demo',
+      eyebrow: "Portfolio",
+      title: "Proyectos seleccionados",
+      intro:
+        "Casos donde combino todas mis capacidades de ingeniería del software para crear productos.",
+      detail: "Detalle",
+      code: "Código",
+      article: "Artículo",
+      demo: "Demo",
       status: {
-        completed: 'Completado',
-        inProgress: 'En desarrollo',
-        hackathon: 'Hackathon',
+        completed: "Completado",
+        inProgress: "En desarrollo",
+        hackathon: "Hackathon",
       },
     },
     experience: {
-      eyebrow: 'Trayectoria',
-      title: 'Experiencia profesional',
-      intro: 'Experiencia en entornos reales de producto con foco en calidad de entrega y evolución técnica.',
+      eyebrow: "Trayectoria",
+      title: "Experiencia profesional",
+      intro:
+        "Experiencia en entornos reales de producto con foco en calidad de entrega y evolución técnica.",
     },
     education: {
-      eyebrow: 'Formación',
-      title: 'Educación',
-      intro: 'Base técnica en ingeniería informática reforzada con especialización en inteligencia artificial.',
+      eyebrow: "Formación",
+      title: "Educación",
+      intro:
+        "Base técnica en ingeniería informática reforzada con especialización en inteligencia artificial.",
     },
     skills: {
-      eyebrow: 'Tecnologías',
-      title: 'Stack, TypeScript y aptitudes',
-      intro: 'Conjunto de competencias técnicas y metodológicas para construir producto fiable, incluyendo ecosistema TypeScript en frontend y backend.',
-      languages: 'Idiomas',
+      eyebrow: "Tecnologías",
+      title: "Stack, TypeScript y aptitudes",
+      intro:
+        "Conjunto de competencias técnicas y metodológicas para construir producto fiable, incluyendo ecosistema TypeScript en frontend y backend.",
+      languages: "Idiomas",
     },
     contact: {
-      eyebrow: 'Contacto',
-      title: '¿Hablamos?',
-      intro: 'Si tienes un reto de ingeniería o producto, puedo aportar desde arquitectura y delivery hasta ejecución full stack.',
-      email: 'Enviar email',
-      linkedin: 'Ver LinkedIn',
-      github: 'Ver GitHub',
+      eyebrow: "Contacto",
+      title: "¿Hablamos?",
+      intro:
+        "Si tienes un reto de ingeniería o producto, puedo aportar desde arquitectura y delivery hasta ejecución full stack.",
+      email: "Enviar email",
+      linkedin: "Ver LinkedIn",
+      github: "Ver GitHub",
     },
     footer: {
-      rights: 'Todos los derechos reservados.',
+      rights: "Todos los derechos reservados.",
     },
-    localeSwitch: 'EN',
+    localeSwitch: "EN",
     theme: {
-      toggle: 'Cambiar tema',
-      light: 'Claro',
-      dark: 'Oscuro',
+      toggle: "Cambiar tema",
+      light: "Claro",
+      dark: "Oscuro",
     },
     projectDetail: {
-      back: 'Volver al portfolio',
-      summary: 'Resumen',
-      stack: 'Tecnologías',
-      team: 'Equipo',
-      duration: 'Duración',
-      links: 'Enlaces',
-      repository: 'Repositorio',
-      article: 'Artículo',
-      demo: 'Demo',
+      back: "Volver al portfolio",
+      summary: "Resumen",
+      stack: "Tecnologías",
+      team: "Equipo",
+      duration: "Duración",
+      links: "Enlaces",
+      repository: "Repositorio",
+      article: "Artículo",
+      demo: "Demo",
+    },
+    blog: {
+      title: "Blog",
+      latestPosts: "Últimos posts en el blog",
+      readMore: "Leer más",
+      backToBlog: "Volver al blog",
+      publishedOn: "Publicado el",
+      tags: "Etiquetas",
+      noPosts: "No hay posts publicados aún.",
+      viewAll: "Ver todos los posts",
     },
   },
   en: {
-    htmlLang: 'en',
+    htmlLang: "en",
     nav: {
-      home: 'Home',
-      projects: 'Projects',
-      experience: 'Experience',
-      education: 'Education',
-      skills: 'Stack',
-      contact: 'Contact',
+      home: "Home",
+      projects: "Projects",
+      experience: "Experience",
+      education: "Education",
+      skills: "Stack",
+      contact: "Contact",
+      blog: "Blog",
     },
     hero: {
-      eyebrow: 'Software Engineering · Full Stack · Product mindset',
-      roleLine: 'Software Engineer in',
-      ctaProjects: 'See projects',
-      ctaContact: 'Get in touch',
-      panelTitle: 'Quick snapshot',
+      eyebrow: "Software Engineering · Full Stack · Product mindset",
+      roleLine: "Software Engineer in",
+      ctaProjects: "See projects",
+      ctaContact: "Get in touch",
+      panelTitle: "Quick snapshot",
       panelItems: [
-        'Solid knowledge of Java/Spring and TypeScript, with hands-on full-stack experience across frontend and backend.',
-        'Daily work with SQL and NoSQL in real product environments.',
-        'Python for AI/Machine Learning and several years using AI agents for code generation.',
+        "Solid knowledge of Java/Spring and TypeScript, with hands-on full-stack experience across frontend and backend.",
+        "Daily work with SQL and NoSQL in real product environments.",
+        "Python for AI/Machine Learning and several years using AI agents for code generation.",
       ],
     },
     about: {
-      eyebrow: 'About',
-      title: 'I build useful, maintainable software with business impact',
-      intro: 'I work with a pragmatic mindset: clear technical decisions, focus on measurable impact, and architecture ready to evolve.',
-      highlightsTitle: 'What I bring to a team',
+      eyebrow: "About",
+      title: "I build useful, maintainable software with business impact",
+      intro:
+        "I work with a pragmatic mindset: clear technical decisions, focus on measurable impact, and architecture ready to evolve.",
+      highlightsTitle: "What I bring to a team",
       highlights: [
-        'Robust technical design with long-term maintainability.',
-        'End-to-end product delivery capabilities.',
-        'Continuous usage of TypeScript frameworks for frontend and backend.',
-        'Practical experience with Python, AI, and coding agents.',
-        'Clear communication between business and engineering.',
+        "Robust technical design with long-term maintainability.",
+        "End-to-end product delivery capabilities.",
+        "Continuous usage of TypeScript frameworks for frontend and backend.",
+        "Practical experience with Python, AI, and coding agents.",
+        "Clear communication between business and engineering.",
       ],
     },
     projects: {
-      eyebrow: 'Portfolio',
-      title: 'Selected projects',
-      intro: 'Examples where I combine all my software engineering capabilities to build products.',
-      detail: 'Details',
-      code: 'Code',
-      article: 'Article',
-      demo: 'Demo',
+      eyebrow: "Portfolio",
+      title: "Selected projects",
+      intro:
+        "Examples where I combine all my software engineering capabilities to build products.",
+      detail: "Details",
+      code: "Code",
+      article: "Article",
+      demo: "Demo",
       status: {
-        completed: 'Completed',
-        inProgress: 'In progress',
-        hackathon: 'Hackathon',
+        completed: "Completed",
+        inProgress: "In progress",
+        hackathon: "Hackathon",
       },
     },
     experience: {
-      eyebrow: 'Career',
-      title: 'Professional experience',
-      intro: 'Experience in real product environments with a strong focus on delivery quality and technical evolution.',
+      eyebrow: "Career",
+      title: "Professional experience",
+      intro:
+        "Experience in real product environments with a strong focus on delivery quality and technical evolution.",
     },
     education: {
-      eyebrow: 'Education',
-      title: 'Education',
-      intro: 'Computer engineering foundation reinforced with postgraduate studies in artificial intelligence.',
+      eyebrow: "Education",
+      title: "Education",
+      intro:
+        "Computer engineering foundation reinforced with postgraduate studies in artificial intelligence.",
     },
     skills: {
-      eyebrow: 'Technologies',
-      title: 'Stack, TypeScript, and skills',
+      eyebrow: "Technologies",
+      title: "Stack, TypeScript, and skills",
       intro:
-        'Set of technical and methodological skills to build reliable software products, including TypeScript ecosystems for frontend and backend.',
-      languages: 'Languages',
+        "Set of technical and methodological skills to build reliable software products, including TypeScript ecosystems for frontend and backend.",
+      languages: "Languages",
     },
     contact: {
-      eyebrow: 'Contact',
-      title: 'Let’s talk',
-      intro: 'If you are building an engineering-driven product, I can contribute from architecture and delivery to full-stack execution.',
-      email: 'Send email',
-      linkedin: 'Open LinkedIn',
-      github: 'Open GitHub',
+      eyebrow: "Contact",
+      title: "Let’s talk",
+      intro:
+        "If you are building an engineering-driven product, I can contribute from architecture and delivery to full-stack execution.",
+      email: "Send email",
+      linkedin: "Open LinkedIn",
+      github: "Open GitHub",
     },
     footer: {
-      rights: 'All rights reserved.',
+      rights: "All rights reserved.",
     },
-    localeSwitch: 'ES',
+    localeSwitch: "ES",
     theme: {
-      toggle: 'Switch theme',
-      light: 'Light',
-      dark: 'Dark',
+      toggle: "Switch theme",
+      light: "Light",
+      dark: "Dark",
     },
     projectDetail: {
-      back: 'Back to portfolio',
-      summary: 'Summary',
-      stack: 'Tech stack',
-      team: 'Team',
-      duration: 'Duration',
-      links: 'Links',
-      repository: 'Repository',
-      article: 'Article',
-      demo: 'Demo',
+      back: "Back to portfolio",
+      summary: "Summary",
+      stack: "Tech stack",
+      team: "Team",
+      duration: "Duration",
+      links: "Links",
+      repository: "Repository",
+      article: "Article",
+      demo: "Demo",
+    },
+    blog: {
+      title: "Blog",
+      latestPosts: "Latest blog posts",
+      readMore: "Read more",
+      backToBlog: "Back to blog",
+      publishedOn: "Published on",
+      tags: "Tags",
+      noPosts: "No posts published yet.",
+      viewAll: "View all posts",
     },
   },
 };
