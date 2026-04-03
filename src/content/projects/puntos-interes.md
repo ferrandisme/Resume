@@ -16,7 +16,7 @@ stack:
   - Team collaboration
 featured: true
 order: 2
-repoUrl: https://github.com/ferrandisme/puntos-interes
+repoUrl: https://github.com/adrianferrandis/puntos-interes
 team:
   es: Equipo multidisciplinar
   en: Multidisciplinary team
@@ -24,6 +24,7 @@ duration:
   es: Hackathon de 1 día
   en: 1-day hackathon
 ---
+
 Proyecto construido con una restricción fuerte de tiempo, priorizando coordinación de equipo, foco en valor y entregables funcionales.
 
 El aprendizaje principal fue equilibrar alcance, decisiones técnicas y experiencia de usuario en una ventana de entrega muy corta.
