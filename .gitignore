@@ -26,3 +26,5 @@ pnpm-debug.log*
 
 #AI
 .github/agents/
+.agents/
+skills-lock.json
